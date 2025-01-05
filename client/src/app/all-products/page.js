@@ -1,53 +1,59 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from 'react'
-import axios from 'axios'
-import NavBar from "../../components/navbar"
-import AllProductsPage from "../../components/all-products-page"
-import Footer from "../../components/footer"
+import { Suspense, useEffect, useState } from 'react';
+import axios from 'axios';
+import NavBar from '../../components/navbar';
+import AllProductsPage from '../../components/all-products-page';
+import Footer from '../../components/footer';
 
-export default function Page() {
-  const [products, setProducts] = useState([])
+function AllProducts() {
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/product/getall-products`)
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/product/getall-products`);
         const fetchedProducts = response.data.ads
-          .filter(product => product.status !== 'InActive') // Filter out 'InActive' products
+          .filter(product => product.status !== 'InActive')
           .map(product => ({
             id: product._id,
             name: product.title,
             price: product.price,
-            image: product.images.length > 0 ? product.images[0] : "/placeholder.svg?height=200&width=200",
+            image: product.images.length > 0 ? product.images[0] : '/placeholder.svg?height=200&width=200',
             description: product.description,
             category: product.category,
             status: product.status,
-            expiryDate: new Date(product.expiryDate),
+            expiryDate: product.expiryDate ? new Date(product.expiryDate).toISOString() : null,
             views: product.views,
             contactDetailsVisible: product.contactDetailsVisible,
             location: product.location,
-            createdAt: new Date(product.createdAt),
-            updatedAt: new Date(product.updatedAt),
+            createdAt: new Date(product.createdAt).toISOString(),
+            updatedAt: new Date(product.updatedAt).toISOString(),
             tags: product.tags,
-            likes: product.likes // Get the number of likes by counting the emails in the 'likes' array
+            likesCount: product.likes ? product.likes.length : 0,
           }))
-          .sort((a, b) => b.likesCount - a.likesCount) // Sort by the length of 'likes' array in descending order
-          
-        setProducts(fetchedProducts)
+          .sort((a, b) => b.likesCount - a.likesCount);
+
+        setProducts(fetchedProducts);
       } catch (error) {
-        console.error("Error fetching products:", error)
+        console.error('Error fetching products:', error);
       }
-    }
+    };
 
-    fetchProducts()
-  }, [])
+    fetchProducts();
+  }, []);
 
+  return <AllProductsPage products={products} />;
+}
+
+export default function Page() {
   return (
     <div className="min-h-screen bg-gray-50">
       <NavBar />
-      <AllProductsPage products={products} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <AllProducts />
+      </Suspense>
       <Footer />
     </div>
-  )
+  );
 }
