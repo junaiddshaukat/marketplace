@@ -10,7 +10,7 @@ const cancelPayment = async (id) => {
 
   try {
     // Changed to match backend expectation - sending id in request body
-    const response = await axios.delete(`http://localhost:8000/payment/cancel`, {
+    const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/payment/cancel`, {
       data: { id: id } // Axios delete with body data
     });
     console.log("API Response:", response.data);

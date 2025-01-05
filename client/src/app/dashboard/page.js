@@ -19,7 +19,7 @@ export default function Dashboard() {
 
   const fetchUserDetails = useCallback(async () => {
     try {
-      const response = await axios.get("http://localhost:8000/user/me", {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/me`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -38,7 +38,7 @@ export default function Dashboard() {
 
   const fetchUserAds = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:8000/product/find-by-user-id/${userId}`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/product/find-by-user-id/${userId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -135,7 +135,7 @@ export default function Dashboard() {
             ))}
           </ul>
         ) : (
-          <p>You haven't posted any ads yet.</p>
+          <p>You haven&apos;t posted any ads yet.</p>
         )}
       </div>
 
@@ -151,7 +151,7 @@ export default function Dashboard() {
             ))}
           </ul>
         ) : (
-          <p>You don't have any active ads at the moment.</p>
+          <p>You don&apos;t have any active ads at the moment.</p>
         )}
       </div>
 

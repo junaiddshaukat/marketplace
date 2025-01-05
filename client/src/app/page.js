@@ -17,7 +17,7 @@ export default function Page() {
   useEffect(() => {
     // Fetch data from the API
     axios
-      .get("http://localhost:8000/product/getall-products")
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/product/getall-products`)
       .then((response) => {
         const products = response.data.ads;
 

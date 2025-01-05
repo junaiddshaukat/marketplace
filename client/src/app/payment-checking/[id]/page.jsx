@@ -8,7 +8,7 @@ import { useParams } from "next/navigation";
 const verifyPayment = async (id) => {
   try {
     
-    const response = await axios.post(`http://localhost:8000/payment/check`, { 
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/payment/check`, { 
       id: id 
     });
    

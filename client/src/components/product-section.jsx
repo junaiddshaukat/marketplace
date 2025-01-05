@@ -15,7 +15,7 @@ export default function ProductSection({ title, products }) {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/user/me", {
+        const response = await axios.get("process.env.NEXT_PUBLIC_API_URL/user/me", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -53,7 +53,7 @@ export default function ProductSection({ title, products }) {
 
     try {
       await axios.put(
-        `http://localhost:8000/product/like/${productId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/product/like/${productId}`,
         { email: user.email },
         {
           headers: {

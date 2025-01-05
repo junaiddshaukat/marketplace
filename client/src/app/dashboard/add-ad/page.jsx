@@ -26,7 +26,7 @@ export default function AddAd() {
   // Fetch the current user ID and check if the user is logged in
   const fetchUserDetails = useCallback(async () => {
     try {
-      const response = await axios.get("http://localhost:8000/user/me", {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/me`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -99,7 +99,7 @@ export default function AddAd() {
         };
 
         const response = await axios.post(
-          "http://localhost:8000/product/create-product",
+          `${process.env.NEXT_PUBLIC_API_URL}/product/create-product`,
           dataToSubmit,
           {
             headers: {

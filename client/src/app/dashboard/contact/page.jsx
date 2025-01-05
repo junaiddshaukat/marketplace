@@ -17,7 +17,7 @@ export default function ContactInformation() {
 
   const fetchUserData = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/user/me", {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/me`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -56,7 +56,7 @@ export default function ContactInformation() {
 
     try {
       const response = await axios.put(
-        'http://localhost:8000/user/updateUserContactInformation',
+       `${process.env.NEXT_PUBLIC_API_URL}/user/updateUserContactInformation`,
         { 
           name: formData.name,
           contactInformation: {

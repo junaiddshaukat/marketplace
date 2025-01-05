@@ -10,7 +10,7 @@ export async function GET() {
   }
 
   try {
-    const response = await fetch('http://localhost:8000/user/me', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/me`, {
       headers: {
         Authorization: `Bearer ${token.value}`,
       },

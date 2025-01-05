@@ -94,7 +94,7 @@ export default function VerifyPage() {
     setError('');
   
     try {
-      const response = await axios.post('http://localhost:8000/user/activate-user', {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/activate-user`, {
         activation_token: token,
         activation_code: verificationCode,
       });
@@ -122,7 +122,7 @@ export default function VerifyPage() {
       if (!tempuser || !tempuser.email) {
         throw new Error('User information is missing. Please try again.')
       }
-      const response = await axios.post('http://localhost:8000/user/registration', {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/registration`, {
         user: tempuser,
       })
       dispatch(
@@ -151,7 +151,7 @@ export default function VerifyPage() {
             User Information Missing
           </h2>
           <p className="text-sm text-red-600">
-            We couldn't find your registration information. Please go back and try again.
+            We couldn&apos;t find your registration information. Please go back and try again.
           </p>
           <Link 
             href="/register" 
@@ -187,7 +187,7 @@ export default function VerifyPage() {
             Check your email
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            We've sent a 4-digit verification code to<br />
+            We&apos;ve sent a 4-digit verification code to<br />
             <span className="font-medium text-gray-900">{tempuser.email}</span>
           </p>
         </div>

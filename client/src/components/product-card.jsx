@@ -14,7 +14,7 @@ export default function ProductCard({ product }) {
   useEffect(() => {
     const checkUserAndLikes = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/user/me", {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/me`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -62,7 +62,7 @@ export default function ProductCard({ product }) {
 
     try {
       const response = await axios.put(
-        `http://localhost:8000/product/like/${product.id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/product/like/${product.id}`,
         { email: user.email },
         { 
           headers: { 

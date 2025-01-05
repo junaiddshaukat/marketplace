@@ -15,7 +15,7 @@ export default function InactiveAds() {
   async function fetchInactiveAds() {
     try {
       const response = await axios.get(
-        "http://localhost:8000/product/getMyInactiveAds",
+        `${process.env.NEXT_PUBLIC_API_URL}/product/getMyInactiveAds`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -51,7 +51,7 @@ export default function InactiveAds() {
     setActivatingAdId(adId);
     try {
       const response = await axios.post(
-        `http://localhost:8000/product/activateAd/${adId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/product/activateAd/${adId}`,
         {},
         {
           headers: {

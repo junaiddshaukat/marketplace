@@ -24,7 +24,7 @@ const ProductsPage = () => {
   const fetchProducts = async () => {
     try {
       setIsLoading(true)
-      const response = await axios.get("http://localhost:8000/product/getall-products")
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/product/getall-products`)
       const productsData = response.data.ads || [] // Handle the ads array
       setProducts(productsData)
       setFilteredProducts(productsData)
@@ -51,7 +51,7 @@ const ProductsPage = () => {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8000/product/delete-product/${productToDelete._id}`, {
+      await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/product/delete-product/${productToDelete._id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

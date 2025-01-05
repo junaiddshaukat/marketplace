@@ -32,7 +32,7 @@ export default function ForgetPassword() {
     setIsLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:8000/user/forgetpassword", formData);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/forgetpassword`, formData);
       toast.success(response.data.message);
       dispatch(userTemporary(response.data.user));
       dispatch({

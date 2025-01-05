@@ -22,7 +22,7 @@ const UsersPage = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/user/admin/get-all-users', {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/admin/get-all-users`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -53,7 +53,7 @@ const UsersPage = () => {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8000/user/admin/delete-user/${userToDelete._id}`, {
+      await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/user/admin/delete-user/${userToDelete._id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

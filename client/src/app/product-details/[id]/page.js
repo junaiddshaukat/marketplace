@@ -30,7 +30,7 @@ export default function ProductPage() {
 
   const fetchUserDetails = useCallback(async () => {
     try {
-      const response = await axios.get("http://localhost:8000/user/me", {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/me`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -49,7 +49,7 @@ export default function ProductPage() {
 
   const fetchProductDetails = useCallback(async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/product/getproduct/${id}`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/product/getproduct/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -58,7 +58,7 @@ export default function ProductPage() {
       
       // Fetch owner details
       if (response.data.ad.postedBy) {
-        const ownerResponse = await axios.get(`http://localhost:8000/user/getseller/${response.data.ad.postedBy}`, {
+        const ownerResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/getseller/${response.data.ad.postedBy}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },

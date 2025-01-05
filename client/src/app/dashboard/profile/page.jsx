@@ -34,7 +34,7 @@ export default function EditProfile() {
 
   const fetchUserData = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/user/me", {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/me`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -59,7 +59,7 @@ export default function EditProfile() {
         const base64Image = e.target.result;
         try {
           const response = await axios.put(
-            'http://localhost:8000/user/update-user-profile-picture', 
+            `${process.env.NEXT_PUBLIC_API_URL}/user/update-user-profile-picture`, 
             { avatar: base64Image },
             {
               headers: {
@@ -124,7 +124,7 @@ export default function EditProfile() {
 
     if (valid) {
       try {
-        const response = await axios.put('http://localhost:8000/user/update-user-info', 
+        const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/user/update-user-info`, 
           { name: firstName, email },
           {
             headers: {
@@ -175,7 +175,7 @@ export default function EditProfile() {
 
     if (valid) {
       try {
-        await axios.put('http://localhost:8000/user/update-user-password', 
+        await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/user/update-user-password`, 
           { oldPassword: currentPassword, newPassword },
           {
             headers: {

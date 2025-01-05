@@ -22,7 +22,7 @@ export default function NavBar() {
 
   const fetchUserDetails = useCallback(async () => {
     try {
-      const response = await axios.get("http://localhost:8000/user/me", {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/me`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -55,7 +55,7 @@ export default function NavBar() {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/user/logout", {
+      const response = await axios.get("process.env.NEXT_PUBLIC_API_URL/user/logout", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

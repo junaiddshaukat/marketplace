@@ -18,7 +18,7 @@ export default function MyAds() {
       setIsLoading(true);
       setError(null);
       try {
-        let endpoint = "http://localhost:8000/product/";
+        let endpoint = `${process.env.NEXT_PUBLIC_API_URL}/product/`;
 
         // Adjust endpoint based on active tab
         switch (activeTab) {
@@ -68,7 +68,7 @@ export default function MyAds() {
   const deleteAd = async (id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8000/product/delete-product/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/product/delete-product/${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

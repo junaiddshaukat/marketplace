@@ -144,7 +144,7 @@ export default function RegisterForm() {
         },
       };
 
-      const response = await axios.post("http://localhost:8000/user/registration", submissionData);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/registration`, submissionData);
       toast.success(response.data.message);
       dispatch(userTemporary(response.data.user));
       dispatch(

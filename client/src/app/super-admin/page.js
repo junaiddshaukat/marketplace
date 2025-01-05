@@ -30,7 +30,7 @@ const DashboardPage = () => {
 
   const checkSuperAdminStatus = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/user/check-super-admin', {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/check-super-admin`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -56,13 +56,13 @@ const DashboardPage = () => {
       
       // Fetch users and products in parallel
       const [usersResponse, productsResponse] = await Promise.all([
-        axios.get('http://localhost:8000/user/admin/get-all-users', {
+        axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/admin/get-all-users`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           withCredentials: true,
         }),
-        axios.get('http://localhost:8000/product/getall-products', {
+        axios.get(`${process.env.NEXT_PUBLIC_API_URL}/product/getall-products`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
