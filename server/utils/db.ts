@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 
 dotenv.config();
-const dbUrl: string = process.env.DB_URL || "";
+const dbUrl: string = "mongodb+srv://root:root@lms.j2ehk.mongodb.net/?retryWrites=true&w=majority&appName=LMS";
 
 const mongodbconnection = async () => {
   try {
