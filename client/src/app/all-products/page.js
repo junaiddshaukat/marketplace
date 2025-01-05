@@ -1,47 +1,34 @@
-'use client'
+import NavBar from "../../components/navbar";
+import AllProductsPage from "../../components/all-products-page";
+import Footer from "../../components/footer";
 
-import { useEffect, useState } from 'react'
-import axios from 'axios'
-import NavBar from "../../components/navbar"
-import AllProductsPage from "../../components/all-products-page"
-import Footer from "../../components/footer"
+export const dynamic = "force-dynamic"; // Optional: Ensures the page is dynamic if needed
 
-export default function Page() {
-  const [products, setProducts] = useState([])
+async function fetchProducts() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/product/getall-products`, {
+    cache: "no-store", // Disable caching for dynamic content
+  });
+  if (!res.ok) throw new Error("Failed to fetch products");
+  const data = await res.json();
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/product/getall-products`)
-        const fetchedProducts = response.data.ads
-          .filter(product => product.status !== 'InActive') // Filter out 'InActive' products
-          .map(product => ({
-            id: product._id,
-            name: product.title,
-            price: product.price,
-            image: product.images.length > 0 ? product.images[0] : "/placeholder.svg?height=200&width=200",
-            description: product.description,
-            category: product.category,
-            status: product.status,
-            expiryDate: new Date(product.expiryDate),
-            views: product.views,
-            contactDetailsVisible: product.contactDetailsVisible,
-            location: product.location,
-            createdAt: new Date(product.createdAt),
-            updatedAt: new Date(product.updatedAt),
-            tags: product.tags,
-            likes: product.likes // Get the number of likes by counting the emails in the 'likes' array
-          }))
-          .sort((a, b) => b.likesCount - a.likesCount) // Sort by the length of 'likes' array in descending order
-          
-        setProducts(fetchedProducts)
-      } catch (error) {
-        console.error("Error fetching products:", error)
-      }
-    }
+  return (data.ads || [])
+    .filter((product) => product.status !== "InActive")
+    .map((product) => ({
+      id: product._id,
+      name: product.title,
+      price: product.price,
+      image: product.images.length > 0 ? product.images[0] : "/placeholder.svg",
+      description: product.description,
+      category: product.category,
+      likes: product.likes.length,
+      createdAt: product.createdAt,
+      updatedAt: product.updatedAt,
+    }))
+    .sort((a, b) => b.likes - a.likes);
+}
 
-    fetchProducts()
-  }, [])
+export default async function Page() {
+  const products = await fetchProducts();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -49,5 +36,5 @@ export default function Page() {
       <AllProductsPage products={products} />
       <Footer />
     </div>
-  )
+  );
 }
