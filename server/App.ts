@@ -44,6 +44,9 @@ app.get("/test", (req: Request, res: Response, next: NextFunction) => {
     message: "API working successfully",
   });
 });
+app.get("/",(req,res)=>{
+  res.send("server is running and up");
+})
 
 // User routes
 app.use("/user", userrouter);
