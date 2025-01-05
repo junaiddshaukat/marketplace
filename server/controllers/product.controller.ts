@@ -3,7 +3,6 @@ import productModel from "../Models/product.model";
 import ErroreHandler from "../utils/ErroreHandler";
 import { v2 as cloudinary } from "cloudinary";
 import multer, { StorageEngine } from "multer";
-import payrexx from '@api/payrexx';
 import dotenv from "dotenv";
 import { buffer } from "stream/consumers";
 import { CatchAsyncErrore } from "../middleware/catchAsyncErrors";
@@ -233,18 +232,6 @@ export const getActiveAds = async (req: Request, res: Response,next:NextFunction
   }
 }
 
-
-
-export const payrexxSign = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  try {
-    const { data } = await payrexx.signaturecheck({ apiKey: process.env.payment_API_KEY || '', instance: process.env.payment_INSTANCE || '' });
-  
-    res.status(200).json({ message: 'Signature check successful', data });
-  } catch (err:any) {
-    console.error(err);
-    return next(new ErroreHandler(err.message, 500));
-  }
-};
 
 
 
