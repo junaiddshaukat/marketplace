@@ -9,8 +9,8 @@ dotenv.config();
 
 
 
-app.listen(process.env.PORT,()=>{
-    console.log(`server is running on the port ${process.env.PORT}`)
+app.listen(8000,()=>{
+    console.log(`server is running on the port 8000`)
     mongodbconnection();
 
 })
