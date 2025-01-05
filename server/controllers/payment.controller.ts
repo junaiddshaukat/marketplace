@@ -36,11 +36,11 @@ export const createGateaway = CatchAsyncErrore(
       
       const amount = 2000;
       const currency = 'CHF';
-      const successRedirectUrl = `https://mama-marketplace.vercel.app/payment-checking/${userId}`;
+      const successRedirectUrl = `http://localhost:3000/payment-checking/${userId}`;
 
    
-      const cancelRedirectUrl = `https://mama-marketplace.vercel.app/payment-cancel/${userId}`;
-      const failedRedirectUrl = `https://mama-marketplace.vercel.app/payment-cancel/${userId}`;
+      const cancelRedirectUrl = `http://localhost:3000/payment-cancel/${userId}`;
+      const failedRedirectUrl = `http://localhost:3000/payment-cancel/${userId}`;
       // console.log(amount, currency);
       const response = await payrexx.createGateway({ amount, currency,successRedirectUrl,cancelRedirectUrl,failedRedirectUrl });
      
@@ -144,7 +144,7 @@ export const createSubscription = CatchAsyncErrore(
           data: response.data,
         });
     } catch (error:any) {
-      console.error(error.message);
+      // console.error(error.message);
     }
   }
 )
@@ -155,7 +155,7 @@ import util from 'util'; // For inspecting circular objects
 export const paymentchecker = async (req: Request, res: Response, next: NextFunction):Promise<any> => {
   try {
     const userId = req.body.id;
-    console.log('User ID:', userId);
+    // console.log('User ID:', userId);
 
     const user = await userModel.findById(userId);
     if (!user) {
@@ -207,10 +207,10 @@ export const paymentchecker = async (req: Request, res: Response, next: NextFunc
 
 
 
-export const cancelPaymentAndDeleteUser = async (req: Request, res: Response): Promise<Response> => {
+export const cancelPaymentAndDeleteUser = async (req: Request, res: Response): Promise<any> => {
   try {
     const { id } = req.body;
-    console.log('User ki  ID:', id);
+    // console.log('User ki  ID:', id);
 
     if (!id) {
       return res.status(400).json({ success: false, message: "User ID is required." });

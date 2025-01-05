@@ -250,7 +250,7 @@ export const payrexxSign = async (req: Request, res: Response, next: NextFunctio
 
 
 
-export const activateAd = async (req: Request, res: Response,next:NextFunction) => {
+export const activateAd = async (req: Request, res: Response,next:NextFunction) : Promise<any>  => {
   try {
     const { adId } = req.params;
     const userId = req.user?._id;
@@ -339,7 +339,7 @@ export const activateAd = async (req: Request, res: Response,next:NextFunction) 
 //   }
 // };
 
-export const toggleLike = async (req: Request, res: Response, next: NextFunction) => {
+export const toggleLike = async (req: Request, res: Response, next: NextFunction) : Promise<any> => {
   try {
     const { productId } = req.params;
     const currentUserEmail = req.body.email;  // Assume `req.user` is populated by isAuthenticated middleware

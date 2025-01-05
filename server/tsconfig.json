@@ -3,11 +3,10 @@
       "target": "ESNext",              // Compatible with modern JavaScript
       "module": "NodeNext",            // Required for ES Modules in Node.js
       "moduleResolution": "NodeNext",  // Ensures correct module resolution
-      "strict": true,                  // Enables strict type checking        // Allows compatibility with CommonJS
+      "strict": true,                  // Enables strict type checking
+      "esModuleInterop": true,         // Allows compatibility with CommonJS
       "skipLibCheck": true,            // Skips type checking in node_modules
-      "forceConsistentCasingInFileNames": true,
-      "resolveJsonModule": true,
-      "esModuleInterop": true
+      "forceConsistentCasingInFileNames": true
     },
     "include": ["**/*.ts", "App.ts"],
     "exclude": ["node_modules"]
