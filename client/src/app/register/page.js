@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -16,8 +16,8 @@ export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // New state for loading
   const [errors, setErrors] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
   const [fieldErrors, setFieldErrors] = useState({});
   const [formData, setFormData] = useState({
@@ -39,38 +39,38 @@ export default function RegisterForm() {
 
   const validateEmail = () => {
     if (formData.user.email !== formData.user._confirmEmail) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        email: 'Emails do not match',
+        email: "Emails do not match",
       }));
       return false;
     }
-    setErrors(prev => ({
+    setErrors((prev) => ({
       ...prev,
-      email: '',
+      email: "",
     }));
     return true;
   };
 
   const validatePassword = () => {
     if (formData.user.password !== formData.user._confirmPassword) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        password: 'Passwords do not match',
+        password: "Passwords do not match",
       }));
       return false;
     }
-    setErrors(prev => ({
+    setErrors((prev) => ({
       ...prev,
-      password: '',
+      password: "",
     }));
     return true;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name.includes('.')) {
-      const [section, subsection, field] = name.split('.');
+    if (name.includes(".")) {
+      const [section, subsection, field] = name.split(".");
       setFormData((prev) => ({
         ...prev,
         [section]: {
@@ -90,12 +90,12 @@ export default function RegisterForm() {
       }));
     }
     // Clear field error when user starts typing
-    setFieldErrors(prev => ({ ...prev, [name]: '' }));
+    setFieldErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const validateField = (name, value) => {
-    if (value.trim() === '') {
-      setFieldErrors(prev => ({ ...prev, [name]: 'This field is required' }));
+    if (value.trim() === "") {
+      setFieldErrors((prev) => ({ ...prev, [name]: "This field is required" }));
       return false;
     }
     return true;
@@ -123,7 +123,7 @@ export default function RegisterForm() {
     ];
 
     requiredFields.forEach((field) => {
-      const value = field.split('.').reduce((obj, key) => obj[key], formData);
+      const value = field.split(".").reduce((obj, key) => obj[key], formData);
       if (!validateField(field, value)) {
         isFormValid = false;
       }
@@ -144,7 +144,13 @@ export default function RegisterForm() {
         },
       };
 
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/registration`, submissionData);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/registration`,
+        submissionData,
+        {
+          withCredentials: true,
+        }
+      );
       toast.success(response.data.message);
       dispatch(userTemporary(response.data.user));
       dispatch(
@@ -155,7 +161,8 @@ export default function RegisterForm() {
 
       router.push("/verify");
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Something went wrong";
+      const errorMessage =
+        error.response?.data?.message || "Something went wrong";
       toast.error(errorMessage);
     } finally {
       setIsLoading(false); // End loading
@@ -172,27 +179,39 @@ export default function RegisterForm() {
             <h2 className="text-xl font-semibold mb-6">Account Information</h2>
             <div className="space-y-4">
               <div>
-                <label className="block mb-1">Username <span className="text-red-500">*</span></label>
+                <label className="block mb-1">
+                  Username <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="text"
                   name="name"
                   required
-                  className={`w-full p-2 border rounded-lg ${fieldErrors['user.name'] ? 'border-red-500' : ''}`}
+                  className={`w-full p-2 border rounded-lg ${
+                    fieldErrors["user.name"] ? "border-red-500" : ""
+                  }`}
                   value={formData.user.name}
                   onChange={handleChange}
                 />
-                {fieldErrors['user.name'] && <p className="text-red-500 text-sm mt-1">{fieldErrors['user.name']}</p>}
+                {fieldErrors["user.name"] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {fieldErrors["user.name"]}
+                  </p>
+                )}
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block mb-1">Password <span className="text-red-500">*</span></label>
+                  <label className="block mb-1">
+                    Password <span className="text-red-500">*</span>
+                  </label>
                   <div className="relative">
                     <input
                       type={showPassword ? "text" : "password"}
                       name="password"
                       required
-                      className={`w-full p-2 border rounded-lg ${fieldErrors['user.password'] ? 'border-red-500' : ''}`}
+                      className={`w-full p-2 border rounded-lg ${
+                        fieldErrors["user.password"] ? "border-red-500" : ""
+                      }`}
                       value={formData.user.password}
                       onChange={handleChange}
                     />
@@ -204,48 +223,85 @@ export default function RegisterForm() {
                       Show Password
                     </button>
                   </div>
-                  {fieldErrors['user.password'] && <p className="text-red-500 text-sm mt-1">{fieldErrors['user.password']}</p>}
-                  {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+                  {fieldErrors["user.password"] && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {fieldErrors["user.password"]}
+                    </p>
+                  )}
+                  {errors.password && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.password}
+                    </p>
+                  )}
                 </div>
                 <div>
-                  <label className="block mb-1">Confirm Password <span className="text-red-500">*</span></label>
+                  <label className="block mb-1">
+                    Confirm Password <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="password"
                     name="_confirmPassword"
                     required
-                    className={`w-full p-2 border rounded-lg ${fieldErrors['user._confirmPassword'] ? 'border-red-500' : ''}`}
+                    className={`w-full p-2 border rounded-lg ${
+                      fieldErrors["user._confirmPassword"]
+                        ? "border-red-500"
+                        : ""
+                    }`}
                     value={formData.user._confirmPassword}
                     onChange={handleChange}
                   />
-                  {fieldErrors['user._confirmPassword'] && <p className="text-red-500 text-sm mt-1">{fieldErrors['user._confirmPassword']}</p>}
+                  {fieldErrors["user._confirmPassword"] && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {fieldErrors["user._confirmPassword"]}
+                    </p>
+                  )}
                 </div>
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block mb-1">Email Address <span className="text-red-500">*</span></label>
+                  <label className="block mb-1">
+                    Email Address <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="email"
                     name="email"
                     required
-                    className={`w-full p-2 border rounded-lg ${fieldErrors['user.email'] ? 'border-red-500' : ''}`}
+                    className={`w-full p-2 border rounded-lg ${
+                      fieldErrors["user.email"] ? "border-red-500" : ""
+                    }`}
                     value={formData.user.email}
                     onChange={handleChange}
                   />
-                  {fieldErrors['user.email'] && <p className="text-red-500 text-sm mt-1">{fieldErrors['user.email']}</p>}
-                  {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                  {fieldErrors["user.email"] && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {fieldErrors["user.email"]}
+                    </p>
+                  )}
+                  {errors.email && (
+                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                  )}
                 </div>
                 <div>
-                  <label className="block mb-1">Confirm Email Address <span className="text-red-500">*</span></label>
+                  <label className="block mb-1">
+                    Confirm Email Address{" "}
+                    <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="email"
                     name="_confirmEmail"
                     required
-                    className={`w-full p-2 border rounded-lg ${fieldErrors['user._confirmEmail'] ? 'border-red-500' : ''}`}
+                    className={`w-full p-2 border rounded-lg ${
+                      fieldErrors["user._confirmEmail"] ? "border-red-500" : ""
+                    }`}
                     value={formData.user._confirmEmail}
                     onChange={handleChange}
                   />
-                  {fieldErrors['user._confirmEmail'] && <p className="text-red-500 text-sm mt-1">{fieldErrors['user._confirmEmail']}</p>}
+                  {fieldErrors["user._confirmEmail"] && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {fieldErrors["user._confirmEmail"]}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -256,52 +312,92 @@ export default function RegisterForm() {
             <h2 className="text-xl font-semibold mb-6">Contact Information</h2>
             <div className="space-y-4">
               <div>
-                <label className="block mb-1">Email <span className="text-red-500">*</span></label>
+                <label className="block mb-1">
+                  Email <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="email"
                   name="user.contactInformation.email"
                   required
-                  className={`w-full p-2 border rounded-lg ${fieldErrors['user.contactInformation.email'] ? 'border-red-500' : ''}`}
+                  className={`w-full p-2 border rounded-lg ${
+                    fieldErrors["user.contactInformation.email"]
+                      ? "border-red-500"
+                      : ""
+                  }`}
                   value={formData.user.contactInformation.email}
                   onChange={handleChange}
                 />
-                {fieldErrors['user.contactInformation.email'] && <p className="text-red-500 text-sm mt-1">{fieldErrors['user.contactInformation.email']}</p>}
+                {fieldErrors["user.contactInformation.email"] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {fieldErrors["user.contactInformation.email"]}
+                  </p>
+                )}
               </div>
               <div>
-                <label className="block mb-1">Phone <span className="text-red-500">*</span></label>
+                <label className="block mb-1">
+                  Phone <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="tel"
                   name="user.contactInformation.phone"
                   required
-                  className={`w-full p-2 border rounded-lg ${fieldErrors['user.contactInformation.phone'] ? 'border-red-500' : ''}`}
+                  className={`w-full p-2 border rounded-lg ${
+                    fieldErrors["user.contactInformation.phone"]
+                      ? "border-red-500"
+                      : ""
+                  }`}
                   value={formData.user.contactInformation.phone}
                   onChange={handleChange}
                 />
-                {fieldErrors['user.contactInformation.phone'] && <p className="text-red-500 text-sm mt-1">{fieldErrors['user.contactInformation.phone']}</p>}
+                {fieldErrors["user.contactInformation.phone"] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {fieldErrors["user.contactInformation.phone"]}
+                  </p>
+                )}
               </div>
               <div>
-                <label className="block mb-1">Address <span className="text-red-500">*</span></label>
+                <label className="block mb-1">
+                  Address <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="text"
                   name="user.contactInformation.address"
                   required
-                  className={`w-full p-2 border rounded-lg ${fieldErrors['user.contactInformation.address'] ? 'border-red-500' : ''}`}
+                  className={`w-full p-2 border rounded-lg ${
+                    fieldErrors["user.contactInformation.address"]
+                      ? "border-red-500"
+                      : ""
+                  }`}
                   value={formData.user.contactInformation.address}
                   onChange={handleChange}
                 />
-                {fieldErrors['user.contactInformation.address'] && <p className="text-red-500 text-sm mt-1">{fieldErrors['user.contactInformation.address']}</p>}
+                {fieldErrors["user.contactInformation.address"] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {fieldErrors["user.contactInformation.address"]}
+                  </p>
+                )}
               </div>
               <div>
-                <label className="block mb-1">Location <span className="text-red-500">*</span></label>
+                <label className="block mb-1">
+                  Location <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="text"
                   name="user.contactInformation.location"
                   required
-                  className={`w-full p-2 border rounded-lg ${fieldErrors['user.contactInformation.location'] ? 'border-red-500' : ''}`}
+                  className={`w-full p-2 border rounded-lg ${
+                    fieldErrors["user.contactInformation.location"]
+                      ? "border-red-500"
+                      : ""
+                  }`}
                   value={formData.user.contactInformation.location}
                   onChange={handleChange}
                 />
-                {fieldErrors['user.contactInformation.location'] && <p className="text-red-500 text-sm mt-1">{fieldErrors['user.contactInformation.location']}</p>}
+                {fieldErrors["user.contactInformation.location"] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {fieldErrors["user.contactInformation.location"]}
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block mb-1">Website</label>
@@ -330,4 +426,3 @@ export default function RegisterForm() {
     </div>
   );
 }
-
