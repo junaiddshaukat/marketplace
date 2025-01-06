@@ -17,7 +17,7 @@ const sendMailer=async (option:EmailOption):Promise <void>=>{
         service:process.env.SMTP_SERVICE,
         auth:{
             user:process.env.SMTP_MAIL,
-            pass:process.env.SMTp_Password,
+            pass:process.env.SMTP_Password,
         }
     })
 
