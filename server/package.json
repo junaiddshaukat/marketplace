@@ -5,7 +5,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --respawn --transpile-only server.ts",
-    "chacha": "nodemon server.ts"
+    "chacha": "nodemon server.ts",
+    "build": "tsc",
+    "start": "ts-node server.ts"
+  },
+  "engines": {
+    "node": "18.x"
   },
   "author": "zain",
   "license": "ISC",
