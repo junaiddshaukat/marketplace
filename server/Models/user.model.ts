@@ -15,7 +15,7 @@ export interface IUser extends Document {
         public_id: string;
         url: string;
     };
-    payment_obj_id?: string | null;
+    payment_obj_id?: string;
     gatewayID?: string;
     gatewayLINK?: string;
     paymentDate?: Date;

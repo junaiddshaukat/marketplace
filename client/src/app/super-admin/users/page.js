@@ -4,18 +4,43 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import axios from 'axios'
 import { Users, Trash2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import SearchBar from '../../../components/SearchBar'
 import DeleteModal from '../../../components/DeleteModal'
 import StatsCard from '../../../components/StatsCard'
+import { toast } from 'react-hot-toast'
 
 const UsersPage = () => {
+  const router = useRouter()
   const [users, setUsers] = useState([])
   const [filteredUsers, setFilteredUsers] = useState([])
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [userToDelete, setUserToDelete] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  // Fetch users on component mount
+  useEffect(() => {
+    checkSuperAdminStatus()
+  }, [])
+
+  const checkSuperAdminStatus = async () => {
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/check-super-admin`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        withCredentials: true,
+      })
+
+      if (!response.data.success) {
+        toast.error('You are not authorized to access this page')
+        router.push('/') // Redirect to home page
+      }
+    } catch (error) {
+      toast.error('You are not authorized to access this page')
+      router.push('/') // Redirect to home page
+    }
+  }
+
   useEffect(() => {
     fetchUsers()
   }, [])
@@ -24,7 +49,7 @@ const UsersPage = () => {
     try {
       const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/admin/get-all-users`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
         withCredentials: true,
       })
@@ -39,7 +64,7 @@ const UsersPage = () => {
   }
 
   const handleSearch = (query) => {
-    const filtered = users.filter(user => 
+    const filtered = users.filter(user =>
       user.name.toLowerCase().includes(query.toLowerCase()) ||
       user.email.toLowerCase().includes(query.toLowerCase())
     )
@@ -55,11 +80,11 @@ const UsersPage = () => {
     try {
       await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/user/admin/delete-user/${userToDelete._id}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
         withCredentials: true,
       })
-      
+
       setUsers(users.filter(u => u._id !== userToDelete._id))
       setFilteredUsers(filteredUsers.filter(u => u._id !== userToDelete._id))
       setDeleteModalOpen(false)
@@ -68,11 +93,10 @@ const UsersPage = () => {
     }
   }
 
-  // Function to get a consistent background color based on name
   const getAvatarBackground = (name) => {
     const colors = [
-      'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 
-      'bg-purple-500', 'bg-pink-500', 'bg-indigo-500'
+      'bg-blue-500', 'bg-green-500', 'bg-yellow-500',
+      'bg-purple-500', 'bg-pink-500', 'bg-indigo-500',
     ]
     const index = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
     return colors[index % colors.length]
@@ -100,12 +124,12 @@ const UsersPage = () => {
           <div key={user._id} className="bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md">
             <div className="p-4 md:p-6">
               {user.avatar?.url ? (
-                <Image 
-                  src={user.avatar.url} 
-                  alt={user.name} 
-                  width={100} 
-                  height={100} 
-                  className="w-20 h-20 rounded-full mx-auto mb-4 object-cover" 
+                <Image
+                  src={user.avatar.url}
+                  alt={user.name}
+                  width={100}
+                  height={100}
+                  className="w-20 h-20 rounded-full mx-auto mb-4 object-cover"
                 />
               ) : (
                 <div className={`w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold text-white ${getAvatarBackground(user.name)}`}>
@@ -135,4 +159,3 @@ const UsersPage = () => {
 }
 
 export default UsersPage
-

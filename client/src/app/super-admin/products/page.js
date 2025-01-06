@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import axios from 'axios'
+import { useRouter } from 'next/navigation'
+import { toast } from 'react-hot-toast'
 import { Package, Trash2 } from 'lucide-react'
 import SearchBar from '../../../components/SearchBar'
 import DeleteModal from '../../../components/DeleteModal'
@@ -15,11 +17,40 @@ const ProductsPage = () => {
   const [productToDelete, setProductToDelete] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false) // Added state for super admin check
+  const router = useRouter()
 
-  // Fetch products on component mount
   useEffect(() => {
-    fetchProducts()
+    checkSuperAdminStatus()
   }, [])
+
+  const checkSuperAdminStatus = async () => {
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/check-super-admin`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        withCredentials: true,
+      })
+      
+      if (response.data.success) {
+        setIsSuperAdmin(true)
+      } else {
+        toast.error('You are not authorized to access this page')
+        router.push('/') // Redirect to home page or previous page
+      }
+    } catch (error) {
+      // console.error('Error checking super admin status:', error)
+      toast.error('You have no access to this page')
+      router.push('/') // Redirect to home page or previous page
+    }
+  }
+
+  useEffect(() => {
+    if (isSuperAdmin) {
+      fetchProducts()
+    }
+  }, [isSuperAdmin])
 
   const fetchProducts = async () => {
     try {
@@ -65,8 +96,11 @@ const ProductsPage = () => {
       setDeleteModalOpen(false)
     } catch (error) {
       console.error('Error deleting product:', error)
-      // You might want to show an error message to the user here
     }
+  }
+
+  if (!isSuperAdmin) {
+    return null // Avoid rendering if user is not super admin
   }
 
   if (isLoading) {
@@ -121,4 +155,3 @@ const ProductsPage = () => {
 }
 
 export default ProductsPage
-

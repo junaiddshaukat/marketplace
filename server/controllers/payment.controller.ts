@@ -34,7 +34,7 @@ export const createGateaway = CatchAsyncErrore(
      
           
       
-      const amount = 2000;
+      const amount = 2500;
       const currency = 'CHF';
       const successRedirectUrl = `https://mama-marketplace.vercel.app/payment-checking/${userId}`;
 

@@ -252,7 +252,7 @@ export const activateAd = async (req: Request, res: Response,next:NextFunction) 
       return next(new ErroreHandler("User not authenticated",400))
     }
 
-    if (user.payment_obj_id === null) {
+    if (user.payment_obj_id === undefined) {
       return res.status(200).json({ 
         success: false, 
         message: 'Please pay for Activate your Add', 

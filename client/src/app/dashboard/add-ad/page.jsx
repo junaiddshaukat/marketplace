@@ -34,7 +34,7 @@ export default function AddAd() {
       });
       console.log();
       setIsLoggedIn(response.data.success);
-      if (response.data.session.payment_obj_id === null) {
+      if (response.data.session.payment_obj_id === undefined) {
         setisUserpaid(false);
       }
 
