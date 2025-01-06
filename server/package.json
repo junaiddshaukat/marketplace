@@ -9,9 +9,6 @@
     "build": "tsc",
     "start": "ts-node server.ts"
   },
-  "engines": {
-    "node": "18.x"
-  },
   "author": "zain",
   "license": "ISC",
   "description": "",

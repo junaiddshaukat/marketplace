@@ -82,7 +82,7 @@ export const createProductAd = async (req: Request, res: Response, next: NextFun
 
 export const getAllProductAds = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const ads : any = [];
+    const ads = await productModel.find();
     res.status(200).json({ message: 'Success', ads });
   } catch (error: any) {
     return next(new ErroreHandler(error.message, 400));
