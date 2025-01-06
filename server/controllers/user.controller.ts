@@ -594,7 +594,7 @@ export const deleteUser = CatchAsyncErrore(async (req: Request, res: Response, n
 
 
 
-  export const checkSuperAdmin = async (req: Request, res: Response) => {
+  export const checkSuperAdmin = async (req: Request, res: Response) : Promise<any> => {
     try {
       const user = req.user;
   

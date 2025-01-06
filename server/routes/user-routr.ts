@@ -5,7 +5,7 @@ import payment from "../middleware/payment";
 import { getGateaway,createGateaway } from "../controllers/payment.controller";
 const userrouter = express.Router();
 
-userrouter.get('/check-super-admin', isAuthenticated);
+userrouter.get('/check-super-admin', isAuthenticated,checkSuperAdmin);
 userrouter.post('/registration',registrationUser);
 userrouter.post("/activate-user",activateUser,createGateaway);
 userrouter.post("/login", loginUser);
