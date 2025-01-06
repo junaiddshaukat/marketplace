@@ -44,7 +44,7 @@ export default function ForgetPassword() {
       router.push("/reset-password");
     } catch (error) {
       const errorMessage = error.response?.data?.message || "Something went wrong";
-      toast.error(errorMessage);
+      toast.error("Something went wrong!!");
     } finally {
       setIsLoading(false);
     }

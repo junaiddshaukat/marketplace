@@ -55,7 +55,7 @@ export default function NavBar() {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.get("process.env.NEXT_PUBLIC_API_URL/user/logout", {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/logout`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

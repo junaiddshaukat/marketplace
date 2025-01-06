@@ -66,7 +66,7 @@ export default function ResetPassword() {
     setIsLoading(true);
 
     try {
-      await axios.post("process.env.NEXT_PUBLIC_API_URL/user/checkResetPasswordOtp", {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/checkResetPasswordOtp`, {
         activation_token: token,
         activation_code: formData.otp.join(''),
       });
@@ -90,7 +90,7 @@ export default function ResetPassword() {
     setIsLoading(true);
 
     try {
-      await axios.post("process.env.NEXT_PUBLIC_API_URL/user/resetPassword", {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/resetPassword`, {
         activation_token: token,
         newpassword: formData.newPassword,
       });

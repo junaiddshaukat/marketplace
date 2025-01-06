@@ -15,7 +15,7 @@ export default function ProductSection({ title, products }) {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get("process.env.NEXT_PUBLIC_API_URL/user/me", {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/me`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
