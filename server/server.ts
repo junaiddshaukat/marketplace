@@ -5,12 +5,11 @@ import mongodbconnection from "./utils/db";
 
 dotenv.config();
 
+const PORT = process.env.PORT || 8000;
 
 
 
-
-app.listen(8000,()=>{
-    console.log(`server is running on the port 8000`)
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
     mongodbconnection();
-
-})
+  });
