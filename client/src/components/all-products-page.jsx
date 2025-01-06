@@ -6,8 +6,8 @@ import { Search, ChevronDown } from 'lucide-react';
 
 import ProductCard from './product-card';
 
-const categories = ['Alle', 'Wohnen', 'Unterwegs', 'Spielzeug', 'Kinderwagen', 'Ernahrung', 'Bekleidung', 'Fur Mama'];
-const priceRanges = ['Alle', '0€ - 20€', '20€ - 50€', '50€ - 100€', '100€+'];
+const categories = ['Alle', 'Kinderwagen', 'Unterwegs', 'Kindersitze', 'Spielzeug', 'Ernährung', 'Wohnen', 'Bekleidung'];
+const priceRanges = ['Alle', '0CHF - 20CHF', '20CHF - 50CHF', '50CHF - 100CHF', '100CHF+'];
 
 export default function AllProductsPage({ products = [] }) {
   const searchParams = useSearchParams();
@@ -35,10 +35,10 @@ export default function AllProductsPage({ products = [] }) {
     const matchesCategory = selectedCategory === 'Alle' || product.category === selectedCategory;
     const matchesPriceRange =
       selectedPriceRange === 'Alle' ||
-      (selectedPriceRange === '0€ - 20€' && product.price <= 20) ||
-      (selectedPriceRange === '20€ - 50€' && product.price > 20 && product.price <= 50) ||
-      (selectedPriceRange === '50€ - 100€' && product.price > 50 && product.price <= 100) ||
-      (selectedPriceRange === '100€+' && product.price > 100);
+      (selectedPriceRange === '0CHF - 20CHF' && product.price <= 20) ||
+      (selectedPriceRange === '20CHF - 50CHF' && product.price > 20 && product.price <= 50) ||
+      (selectedPriceRange === '50CHF - 100CHF' && product.price > 50 && product.price <= 100) ||
+      (selectedPriceRange === '100CHF+' && product.price > 100);
     return matchesSearch && matchesCategory && matchesPriceRange;
   });
 

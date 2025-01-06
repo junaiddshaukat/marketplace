@@ -109,7 +109,7 @@ export default function ProductCard({ product }) {
       </div>
       <div className="p-4">
         <h3 className="mb-2 font-semibold text-gray-800">{product.name}</h3>
-        <p className="mb-2 text-lg font-bold text-[#FF8A00]">€{product.price.toFixed(2)}</p>
+        <p className="mb-2 text-lg font-bold text-[#FF8A00]">CHF {product.price.toFixed(2)}</p>
         <p className="mb-4 text-sm text-gray-500">{product.description}</p>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

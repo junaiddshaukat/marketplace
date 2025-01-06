@@ -194,14 +194,13 @@ export default function AddAd() {
                   required
                 >
                   <option value="">Select a category</option>
-                  <option value="Wohnen">Wohnen</option>
-                  <option value="Unterwegs">Unterwegs</option>
-                  <option value="Spielzeug">Spielzeug</option>
                   <option value="Kinderwagen">Kinderwagen</option>
+                  <option value="Unterwegs">Unterwegs</option>
                   <option value="Kindersitze">Kindersitze</option>
-                  <option value="Ernahrung">Ernahrung</option>
+                  <option value="Spielzeug">Spielzeug</option>
+                  <option value="Ernährung">Ernährung</option>
+                  <option value="Wohnen">Wohnen</option>
                   <option value="Bekleidung">Bekleidung</option>
-                  <option value="Fur Mama">Fur Mama</option>
                 </select>
               </div>
               <div>
