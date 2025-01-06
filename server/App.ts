@@ -23,7 +23,7 @@ app.use(cookieParser());
 
 
 // CORS configuration
-const allowedOrigins = ['http://localhost:3000','https://mama-marketplace.vercel.app/'];
+const allowedOrigins = ['http://localhost:3000','https://mama-marketplace.vercel.app'];
 app.use(
   cors({
     origin: (origin, callback) => {
