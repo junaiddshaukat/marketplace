@@ -10,7 +10,7 @@ interface ITokenOption {
   expires: Date;
   maxAge: number;
   httpOnly: boolean;
-  sameSite: 'lax' | 'strict' | 'none' | undefined;
+  sameSite: "lax" | "strict" | "none" | undefined;
   secure?: boolean;
 }
 
@@ -22,7 +22,8 @@ export const accessTokenOption: ITokenOption = {
   expires: new Date(Date.now() + accessTokenExpire * 60 * 1000), // 365 days
   maxAge: accessTokenExpire * 60 * 1000,
   httpOnly: true,
-  sameSite: 'lax',
+  sameSite: "none", // Needed for cross-origin requests
+  secure: process.env.NODE_ENV === "production", // Secure cookies for HTTPS in production
 };
 
 // Function to send the token
@@ -40,17 +41,8 @@ export const sendToken = async (user: IUser, res: Response, statusCode: number) 
       console.error("Redis set error:", error);
     }
 
-    // Ensure secure cookies in production
-    if (process.env.NODE_ENV === 'production') {
-      accessTokenOption.secure = true;
-    } else {
-      accessTokenOption.secure = false;
-    }
-
-
-
     // Set the access token cookie
-    res.cookie('access_token', accessToken, accessTokenOption);
+    res.cookie("access_token", accessToken, accessTokenOption);
 
     // Send the response with the access token
     res.status(statusCode).json({
