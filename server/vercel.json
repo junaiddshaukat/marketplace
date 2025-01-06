@@ -3,19 +3,16 @@
   "builds": [
     {
       "src": "server.ts",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["**/*.ts", "**/*.json"]
-      }
+      "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/"
+      "dest": "server.ts"
     }
   ],
   "env": {
-    "NODE_ENV": "development"
+    "NODE_ENV": "production"
   }
 }
