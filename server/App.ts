@@ -22,30 +22,21 @@ app.use(express.json({ limit: "50mb" }));
 app.use(cookieParser());
 
 
+// CORS configuration
+const allowedOrigins = ['http://localhost:3000','https://mama-marketplace.vercel.app/'];
 app.use(
   cors({
-    origin: "*",  // Allow all origins
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true,  // Allow credentials (cookies, etc.)
+    credentials: true,
   })
 );
-
-
-// CORS configuration
-// const allowedOrigins = ['http://localhost:3000','https://mama-marketplace.vercel.app/'];
-// app.use(
-//   cors({
-//     origin: (origin, callback) => {
-//       if (!origin || allowedOrigins.includes(origin)) {
-//         callback(null, true);
-//       } else {
-//         callback(new Error('Not allowed by CORS'));
-//       }
-//     },
-//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//     credentials: true,
-//   })
-// );
 
 // Test route
 app.get("/test", (req: Request, res: Response, next: NextFunction) => {
