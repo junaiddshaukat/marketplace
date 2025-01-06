@@ -592,6 +592,7 @@ export const deleteUser = CatchAsyncErrore(async (req: Request, res: Response, n
 
 
 
+  // Check if the user is a super admin
 
 
   export const checkSuperAdmin = async (req: Request, res: Response) : Promise<any> => {
