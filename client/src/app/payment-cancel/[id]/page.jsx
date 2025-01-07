@@ -23,10 +23,10 @@ const cancelPayment = async (id) => {
 
 const CustomLoader = () => (
   <div className="flex flex-col items-center justify-center h-screen bg-[#FFE6F0]">
-    <div className="text-[#FFB5C7] text-4xl font-bold mb-8 text-center">
+    <div className="text-[#ffa7b3] text-4xl font-bold mb-8 text-center">
       Cancelling your payment...
     </div>
-    <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#FFB5C7]"></div>
+    <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#ffa7b3]"></div>
   </div>
 );
 
@@ -39,11 +39,11 @@ const StatusModal = ({ message, onClose }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-        <h3 className="text-xl font-bold mb-4 text-[#FFB5C7]">Payment Cancelled</h3>
+        <h3 className="text-xl font-bold mb-4 text-[#ffa7b3]">Payment Cancelled</h3>
         <p className="text-gray-600 mb-6">{message}</p>
         <button
           onClick={onClose}
-          className="bg-[#FFB5C7] text-white px-4 py-2 rounded hover:bg-[#ff9fb8]"
+          className="bg-[#ffa7b3] text-white px-4 py-2 rounded hover:bg-[#ff9fb8]"
         >
           Close
         </button>

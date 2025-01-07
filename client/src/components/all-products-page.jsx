@@ -52,7 +52,7 @@ export default function AllProductsPage({ products = [] }) {
               <input
                 type="text"
                 placeholder="Produkt suchen..."
-                className="w-full rounded-full border-0 p-4 pl-12 pr-4 shadow-lg focus:ring-2 focus:ring-[#FFB5C7]"
+                className="w-full rounded-full border-0 p-4 pl-12 pr-4 shadow-lg focus:ring-2 focus:ring-[#ffa7b3]"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -63,7 +63,7 @@ export default function AllProductsPage({ products = [] }) {
           {/* Heading and Product Count */}
           <div className="mb-8 flex items-center justify-between">
             <h1 className="text-3xl font-bold text-gray-900">{selectedCategory} Produkte</h1>
-            <span className="rounded-full bg-[#FFB5C7] px-3 py-1 text-sm font-semibold text-white">
+            <span className="rounded-full bg-[#ffa7b3] px-3 py-1 text-sm font-semibold text-white">
               {filteredProducts.length} Produkte
             </span>
           </div>
@@ -93,7 +93,7 @@ export default function AllProductsPage({ products = [] }) {
                           value={category}
                           checked={selectedCategory === category}
                           onChange={() => setSelectedCategory(category)}
-                          className="mr-2 text-[#FFB5C7] focus:ring-[#FFB5C7]"
+                          className="mr-2 text-[#ffa7b3] focus:ring-[#ffa7b3]"
                         />
                         {category}
                       </label>
@@ -123,7 +123,7 @@ export default function AllProductsPage({ products = [] }) {
                           value={range}
                           checked={selectedPriceRange === range}
                           onChange={() => setSelectedPriceRange(range)}
-                          className="mr-2 text-[#FFB5C7] focus:ring-[#FFB5C7]"
+                          className="mr-2 text-[#ffa7b3] focus:ring-[#ffa7b3]"
                         />
                         {range}
                       </label>

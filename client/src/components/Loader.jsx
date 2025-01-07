@@ -12,17 +12,17 @@ const Loader = ({ size = 'medium' }) => {
   return (
     <div className={`${sizeClasses[size]} relative`}>
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-full h-full border-2 border-[#FFB5C7] rounded-full opacity-20"></div>
+        <div className="w-full h-full border-2 border-[#ffa7b3] rounded-full opacity-20"></div>
       </div>
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-full h-full border-t-2 border-[#FFB5C7] rounded-full animate-spin"></div>
+        <div className="w-full h-full border-t-2 border-[#ffa7b3] rounded-full animate-spin"></div>
       </div>
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-3/4 h-3/4 border-2 border-[#FFB5C7] rounded-full opacity-30 animate-ping"></div>
+        <div className="w-3/4 h-3/4 border-2 border-[#ffa7b3] rounded-full opacity-30 animate-ping"></div>
       </div>
       <div className="absolute inset-0 flex items-center justify-center">
         <svg
-          className="w-1/2 h-1/2 text-[#FFB5C7] animate-pulse"
+          className="w-1/2 h-1/2 text-[#ffa7b3] animate-pulse"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"

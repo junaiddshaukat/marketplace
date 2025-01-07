@@ -2,19 +2,19 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import { userRegistration } from "../redux/features/auth/authSlice";
-import { userTemporary } from "../redux/features/auth/authSlice";
+import { userRegistration, userTemporary } from "../redux/features/auth/authSlice";
 import toast from "react-hot-toast";
+import { Eye, EyeOff } from 'lucide-react';
+import Link from "next/link";
 
 export default function RegisterForm() {
   const dispatch = useDispatch();
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // New state for loading
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({
     email: "",
     password: "",
@@ -37,6 +37,7 @@ export default function RegisterForm() {
     },
   });
 
+  // Keeping all the existing validation functions
   const validateEmail = () => {
     if (formData.user.email !== formData.user._confirmEmail) {
       setErrors((prev) => ({
@@ -89,7 +90,6 @@ export default function RegisterForm() {
         },
       }));
     }
-    // Clear field error when user starts typing
     setFieldErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
@@ -109,7 +109,6 @@ export default function RegisterForm() {
 
     let isFormValid = isEmailValid && isPasswordValid;
 
-    // Validate all required fields
     const requiredFields = [
       "user.name",
       "user.email",
@@ -133,7 +132,7 @@ export default function RegisterForm() {
       return;
     }
 
-    setIsLoading(true); // Start loading
+    setIsLoading(true);
     try {
       const submissionData = {
         user: {
@@ -161,268 +160,331 @@ export default function RegisterForm() {
 
       router.push("/verify");
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message || "Something went wrong";
+      const errorMessage = error.response?.data?.message || "Something went wrong";
       toast.error(errorMessage);
     } finally {
-      setIsLoading(false); // End loading
+      setIsLoading(false);
     }
   };
+
   return (
-    <div className="min-h-screen bg-white p-4 md:p-6">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-6">Register</h1>
+    <div className="min-h-screen bg-gray-50 p-4 md:p-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-8">
+          <Link
+            href="/back"
+            className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900"
+          >
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back
+          </Link>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Account Information */}
-          <div className="bg-white rounded-lg border p-6">
-            <h2 className="text-xl font-semibold mb-6">Account Information</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block mb-1">
-                  Username <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  required
-                  className={`w-full p-2 border rounded-lg ${
-                    fieldErrors["user.name"] ? "border-red-500" : ""
-                  }`}
-                  value={formData.user.name}
-                  onChange={handleChange}
-                />
-                {fieldErrors["user.name"] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {fieldErrors["user.name"]}
-                  </p>
-                )}
+        <div className="grid md:grid-cols-[300px,1fr] gap-6">
+          {/* Features Panel */}
+          <div className="bg-white rounded-lg border p-6 h-fit">
+            <div className="mb-4">
+              <h3 className="text-pink-600 font-semibold">Mama Marketplace</h3>
+              <div className="mt-2">
+                <span className="text-3xl font-bold">CHF 25</span>
+                <span className="text-gray-600 ml-1">/year</span>
               </div>
+              <p className="text-sm text-gray-500 mt-1">Premium Plan</p>
+            </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block mb-1">
-                    Password <span className="text-red-500">*</span>
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      name="password"
-                      required
-                      className={`w-full p-2 border rounded-lg ${
-                        fieldErrors["user.password"] ? "border-red-500" : ""
-                      }`}
-                      value={formData.user.password}
-                      onChange={handleChange}
-                    />
-                    <button
-                      type="button"
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-pink-500"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      Show Password
-                    </button>
+            <div className="space-y-3 mt-6">
+              <div className="flex items-center text-gray-600">
+                <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span>3 Users</span>
+              </div>
+              <div className="flex items-center text-gray-600">
+                <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Up to 5 collections/month</span>
+              </div>
+              <div className="flex items-center text-gray-600">
+                <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span>5% sales fees for the platform</span>
+              </div>
+              <div className="flex items-center text-gray-600">
+                <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span>5% resale royalty</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Registration Form */}
+          <div>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="bg-white rounded-lg border p-6 shadow-sm">
+                <div className="mb-6">
+                  <h2 className="text-2xl font-semibold text-gray-900">Complete your Registration</h2>
+                </div>
+
+                {/* Account Information */}
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Account Information
+                    </h3>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block mb-1 font-medium">
+                          Username <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          name="name"
+                          required
+                          className={`w-full p-2.5 border rounded-lg  focus:border-pink-500 ${
+                            fieldErrors["user.name"] ? "border-red-500" : "border-gray-300"
+                          }`}
+                          value={formData.user.name}
+                          onChange={handleChange}
+                        />
+                        {fieldErrors["user.name"] && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {fieldErrors["user.name"]}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block mb-1 font-medium">
+                            Password <span className="text-red-500">*</span>
+                          </label>
+                          <div className="relative">
+                            <input
+                              type={showPassword ? "text" : "password"}
+                              name="password"
+                              required
+                              className={`w-full p-2.5 border rounded-lg  focus:border-pink-500 ${
+                                fieldErrors["user.password"] ? "border-red-500" : "border-gray-300"
+                              }`}
+                              value={formData.user.password}
+                              onChange={handleChange}
+                            />
+                            <button
+                              type="button"
+                              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                              onClick={() => setShowPassword(!showPassword)}
+                            >
+                              {showPassword ? (
+                                <EyeOff className="h-5 w-5" />
+                              ) : (
+                                <Eye className="h-5 w-5" />
+                              )}
+                            </button>
+                          </div>
+                          {fieldErrors["user.password"] && (
+                            <p className="text-red-500 text-sm mt-1">
+                              {fieldErrors["user.password"]}
+                            </p>
+                          )}
+                          {errors.password && (
+                            <p className="text-red-500 text-sm mt-1">
+                              {errors.password}
+                            </p>
+                          )}
+                        </div>
+                        <div>
+                          <label className="block mb-1 font-medium">
+                            Confirm Password <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="password"
+                            name="_confirmPassword"
+                            required
+                            className={`w-full p-2.5 border rounded-lg  focus:border-pink-500 ${
+                              fieldErrors["user._confirmPassword"] ? "border-red-500" : "border-gray-300"
+                            }`}
+                            value={formData.user._confirmPassword}
+                            onChange={handleChange}
+                          />
+                          {fieldErrors["user._confirmPassword"] && (
+                            <p className="text-red-500 text-sm mt-1">
+                              {fieldErrors["user._confirmPassword"]}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block mb-1 font-medium">
+                            Email Address <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="email"
+                            name="email"
+                            required
+                            className={`w-full p-2.5 border rounded-lg  focus:border-pink-500 ${
+                              fieldErrors["user.email"] ? "border-red-500" : "border-gray-300"
+                            }`}
+                            value={formData.user.email}
+                            onChange={handleChange}
+                          />
+                          {fieldErrors["user.email"] && (
+                            <p className="text-red-500 text-sm mt-1">
+                              {fieldErrors["user.email"]}
+                            </p>
+                          )}
+                          {errors.email && (
+                            <p className="text-red-500 text-sm mt-1">
+                              {errors.email}
+                            </p>
+                          )}
+                        </div>
+                        <div>
+                          <label className="block mb-1 font-medium">
+                            Confirm Email Address{" "}
+                            <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="email"
+                            name="_confirmEmail"
+                            required
+                            className={`w-full p-2.5 border rounded-lg  focus:border-pink-500 ${
+                              fieldErrors["user._confirmEmail"] ? "border-red-500" : "border-gray-300"
+                            }`}
+                            value={formData.user._confirmEmail}
+                            onChange={handleChange}
+                          />
+                          {fieldErrors["user._confirmEmail"] && (
+                            <p className="text-red-500 text-sm mt-1">
+                              {fieldErrors["user._confirmEmail"]}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  {fieldErrors["user.password"] && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {fieldErrors["user.password"]}
-                    </p>
-                  )}
-                  {errors.password && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.password}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <label className="block mb-1">
-                    Confirm Password <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="password"
-                    name="_confirmPassword"
-                    required
-                    className={`w-full p-2 border rounded-lg ${
-                      fieldErrors["user._confirmPassword"]
-                        ? "border-red-500"
-                        : ""
-                    }`}
-                    value={formData.user._confirmPassword}
-                    onChange={handleChange}
-                  />
-                  {fieldErrors["user._confirmPassword"] && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {fieldErrors["user._confirmPassword"]}
-                    </p>
-                  )}
+
+                  {/* Contact Information */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Contact Information
+                    </h3>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block mb-1 font-medium">
+                          Email <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="email"
+                          name="user.contactInformation.email"
+                          required
+                          className={`w-full p-2.5 border rounded-lg  focus:border-pink-500 ${
+                            fieldErrors["user.contactInformation.email"] ? "border-red-500" : "border-gray-300"
+                          }`}
+                          value={formData.user.contactInformation.email}
+                          onChange={handleChange}
+                        />
+                        {fieldErrors["user.contactInformation.email"] && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {fieldErrors["user.contactInformation.email"]}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <label className="block mb-1 font-medium">
+                          Phone <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="tel"
+                          name="user.contactInformation.phone"
+                          required
+                          className={`w-full p-2.5 border rounded-lg  focus:border-pink-500 ${
+                            fieldErrors["user.contactInformation.phone"] ? "border-red-500" : "border-gray-300"
+                          }`}
+                          value={formData.user.contactInformation.phone}
+                          onChange={handleChange}
+                        />
+                        {fieldErrors["user.contactInformation.phone"] && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {fieldErrors["user.contactInformation.phone"]}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <label className="block mb-1 font-medium">
+                          Address <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          name="user.contactInformation.address"
+                          required
+                          className={`w-full p-2.5 border rounded-lg  focus:border-pink-500 ${
+                            fieldErrors["user.contactInformation.address"] ? "border-red-500" : "border-gray-300"
+                          }`}
+                          value={formData.user.contactInformation.address}
+                          onChange={handleChange}
+                        />
+                        {fieldErrors["user.contactInformation.address"] && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {fieldErrors["user.contactInformation.address"]}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <label className="block mb-1 font-medium">
+                          Location <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          name="user.contactInformation.location"
+                          required
+                          className={`w-full p-2.5 border rounded-lg  focus:border-pink-500 ${
+                            fieldErrors["user.contactInformation.location"] ? "border-red-500" : "border-gray-300"
+                          }`}
+                          value={formData.user.contactInformation.location}
+                          onChange={handleChange}
+                        />
+                        {fieldErrors["user.contactInformation.location"] && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {fieldErrors["user.contactInformation.location"]}
+                          </p>
+                        )}
+                      </div>
+                      {/* <div>
+                        <label className="block mb-1 font-medium">Website</label>
+                        <input
+                          type="url"
+                          name="user.contactInformation.website"
+                          className="w-full p-2.5 border border-gray-300 rounded-lg  focus:border-pink-500"
+                          value={formData.user.contactInformation.website}
+                          onChange={handleChange}
+                        />
+                      </div> */}
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block mb-1">
-                    Email Address <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    className={`w-full p-2 border rounded-lg ${
-                      fieldErrors["user.email"] ? "border-red-500" : ""
-                    }`}
-                    value={formData.user.email}
-                    onChange={handleChange}
-                  />
-                  {fieldErrors["user.email"] && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {fieldErrors["user.email"]}
-                    </p>
-                  )}
-                  {errors.email && (
-                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-                  )}
-                </div>
-                <div>
-                  <label className="block mb-1">
-                    Confirm Email Address{" "}
-                    <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    name="_confirmEmail"
-                    required
-                    className={`w-full p-2 border rounded-lg ${
-                      fieldErrors["user._confirmEmail"] ? "border-red-500" : ""
-                    }`}
-                    value={formData.user._confirmEmail}
-                    onChange={handleChange}
-                  />
-                  {fieldErrors["user._confirmEmail"] && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {fieldErrors["user._confirmEmail"]}
-                    </p>
-                  )}
-                </div>
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="px-6 py-2.5 bg-pink-600 text-white rounded-lg hover:bg-pink-700 focus:outline-none  focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {isLoading ? "Processing..." : "Register"}
+                </button>
               </div>
-            </div>
+            </form>
           </div>
-
-          {/* Contact Information */}
-          <div className="bg-white rounded-lg border p-6">
-            <h2 className="text-xl font-semibold mb-6">Contact Information</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block mb-1">
-                  Email <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="email"
-                  name="user.contactInformation.email"
-                  required
-                  className={`w-full p-2 border rounded-lg ${
-                    fieldErrors["user.contactInformation.email"]
-                      ? "border-red-500"
-                      : ""
-                  }`}
-                  value={formData.user.contactInformation.email}
-                  onChange={handleChange}
-                />
-                {fieldErrors["user.contactInformation.email"] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {fieldErrors["user.contactInformation.email"]}
-                  </p>
-                )}
-              </div>
-              <div>
-                <label className="block mb-1">
-                  Phone <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="tel"
-                  name="user.contactInformation.phone"
-                  required
-                  className={`w-full p-2 border rounded-lg ${
-                    fieldErrors["user.contactInformation.phone"]
-                      ? "border-red-500"
-                      : ""
-                  }`}
-                  value={formData.user.contactInformation.phone}
-                  onChange={handleChange}
-                />
-                {fieldErrors["user.contactInformation.phone"] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {fieldErrors["user.contactInformation.phone"]}
-                  </p>
-                )}
-              </div>
-              <div>
-                <label className="block mb-1">
-                  Address <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="user.contactInformation.address"
-                  required
-                  className={`w-full p-2 border rounded-lg ${
-                    fieldErrors["user.contactInformation.address"]
-                      ? "border-red-500"
-                      : ""
-                  }`}
-                  value={formData.user.contactInformation.address}
-                  onChange={handleChange}
-                />
-                {fieldErrors["user.contactInformation.address"] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {fieldErrors["user.contactInformation.address"]}
-                  </p>
-                )}
-              </div>
-              <div>
-                <label className="block mb-1">
-                  Location <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="user.contactInformation.location"
-                  required
-                  className={`w-full p-2 border rounded-lg ${
-                    fieldErrors["user.contactInformation.location"]
-                      ? "border-red-500"
-                      : ""
-                  }`}
-                  value={formData.user.contactInformation.location}
-                  onChange={handleChange}
-                />
-                {fieldErrors["user.contactInformation.location"] && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {fieldErrors["user.contactInformation.location"]}
-                  </p>
-                )}
-              </div>
-              <div>
-                <label className="block mb-1">Website</label>
-                <input
-                  type="url"
-                  name="user.contactInformation.website"
-                  className="w-full p-2 border rounded-lg"
-                  value={formData.user.contactInformation.website}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="flex justify-start">
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="bg-pink-500 text-white px-6 py-2 rounded-lg hover:bg-pink-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-            >
-              {isLoading ? "Processing..." : "Register"}
-            </button>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
   );
 }
+

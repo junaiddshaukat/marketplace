@@ -1,15 +1,10 @@
-import { Geist, Azeret_Mono as Geist_Mono } from 'next/font/google'
+import { Urbanist } from 'next/font/google'
 import "./globals.css"
 import { Providers } from "./Provider"
 import { Toaster } from 'react-hot-toast'
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-})
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const urbanist = Urbanist({
+  variable: "--font-urbanist",
   subsets: ["latin"],
 })
 
@@ -21,11 +16,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${urbanist.variable} font-sans antialiased`}>
         <Providers>
-        <Toaster />
-          {children}</Providers>
+          <Toaster />
+          {children}
+        </Providers>
       </body>
     </html>
   )
 }
+

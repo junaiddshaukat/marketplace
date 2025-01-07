@@ -16,7 +16,7 @@ export default function SubscriptionPage() {
         />
         {/* <h1 className="text-2xl font-medium">
           <span className="text-[#FF8BA7]">Mama</span>{' '}
-          <span className="text-[#98D8E1]">Marketplace</span>
+          <span className="text-[#91d2e3]">Marketplace</span>
         </h1> */}
       </div>
 

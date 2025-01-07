@@ -142,7 +142,7 @@ export default function ResetPassword() {
           
           <div className="mt-6 flex justify-center">
             <div className="relative h-20 w-20 rounded-full bg-[#FFE6F0] p-5">
-              <Mail className="h-10 w-10 text-[#FFB5C7]" />
+              <Mail className="h-10 w-10 text-[#ffa7b3]" />
             </div>
           </div>
 
@@ -169,7 +169,7 @@ export default function ResetPassword() {
                     value={digit}
                     onChange={(e) => handleChange(e, index)}
                     className="h-16 w-16 rounded-xl border-2 bg-white text-center text-2xl font-semibold 
-                      border-gray-200 focus:border-[#FFB5C7] focus:outline-none focus:ring-2 focus:ring-[#FFB5C7] focus:ring-opacity-50"
+                      border-gray-200 focus:border-[#ffa7b3] focus:outline-none focus:ring-2 focus:ring-[#ffa7b3] focus:ring-opacity-50"
                     required
                   />
                 ))}
@@ -179,7 +179,7 @@ export default function ResetPassword() {
                   type="button"
                   onClick={handleResendOtp}
                   disabled={isLoading}
-                  className="mt-4 text-sm text-[#FFB5C7] hover:text-[#ff9fb8]"
+                  className="mt-4 text-sm text-[#ffa7b3] hover:text-[#ff9fb8]"
                 >
                   Resend code
                 </button>
@@ -203,7 +203,7 @@ export default function ResetPassword() {
                   required
                   value={formData.newPassword}
                   onChange={handlePasswordChange}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#FFB5C7] focus:outline-none focus:ring-1 focus:ring-[#FFB5C7]"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#ffa7b3] focus:outline-none focus:ring-1 focus:ring-[#ffa7b3]"
                 />
               </div>
               <div>
@@ -217,7 +217,7 @@ export default function ResetPassword() {
                   required
                   value={formData.confirmPassword}
                   onChange={handlePasswordChange}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#FFB5C7] focus:outline-none focus:ring-1 focus:ring-[#FFB5C7]"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#ffa7b3] focus:outline-none focus:ring-1 focus:ring-[#ffa7b3]"
                 />
               </div>
             </div>
@@ -225,7 +225,7 @@ export default function ResetPassword() {
           <button
             type="submit"
             disabled={isLoading}
-            className="group relative flex w-full justify-center rounded-md bg-[#FFB5C7] px-4 py-2 text-sm font-semibold text-white hover:bg-[#ff9fb8] focus:outline-none focus:ring-2 focus:ring-[#FFB5C7] focus:ring-offset-2 disabled:opacity-50"
+            className="group relative flex w-full justify-center rounded-md bg-[#ffa7b3] px-4 py-2 text-sm font-semibold text-white hover:bg-[#ff9fb8] focus:outline-none focus:ring-2 focus:ring-[#ffa7b3] focus:ring-offset-2 disabled:opacity-50"
           >
             {isLoading
               ? "Processing..."

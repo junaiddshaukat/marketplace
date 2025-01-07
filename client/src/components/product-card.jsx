@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Image from 'next/image'
-import { Heart } from 'lucide-react'
+import { Heart, LocateIcon } from 'lucide-react'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
 
@@ -52,8 +52,8 @@ export default function ProductCard({ product }) {
     e.preventDefault()
     
     if (!user) {
-      // alert('Please log in to like this product')
-      toast.error('Please log in to like this product')
+      // alert('please log in to like this product')
+      toast.error('please log in to like this product')
       return
     }
 
@@ -114,7 +114,7 @@ export default function ProductCard({ product }) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="flex items-center rounded-full bg-[#FFE6F0] px-3 py-1">
-              <span className="text-sm text-[#FFB5C7]">{product.location}</span>
+              <span className="text-sm text-[#ffa7b3]"><LocateIcon/>{product.location}</span>
             </div>
           </div>
           <Link 

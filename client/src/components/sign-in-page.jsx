@@ -85,7 +85,7 @@ export default function SignInPage() {
                   type="email"
                   autoComplete="email"
                   required
-                  className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-[#FFB5C7] focus:outline-none focus:ring-[#FFB5C7] sm:text-sm"
+                  className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-[#ffa7b3] focus:outline-none focus:ring-[#ffa7b3] sm:text-sm"
                   placeholder="E-Mail-Adresse"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -101,7 +101,7 @@ export default function SignInPage() {
                   type="password"
                   autoComplete="current-password"
                   required
-                  className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-[#FFB5C7] focus:outline-none focus:ring-[#FFB5C7] sm:text-sm"
+                  className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-[#ffa7b3] focus:outline-none focus:ring-[#ffa7b3] sm:text-sm"
                   placeholder="Passwort"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -115,7 +115,7 @@ export default function SignInPage() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300 text-[#FFB5C7] focus:ring-[#FFB5C7]"
+                  className="h-4 w-4 rounded border-gray-300 text-[#ffa7b3] focus:ring-[#ffa7b3]"
                 />
                 <label
                   htmlFor="remember-me"
@@ -128,7 +128,7 @@ export default function SignInPage() {
               <div className="text-sm">
                 <Link
                   href="/forget-password"
-                  className="font-medium text-[#FFB5C7] hover:text-[#ff9fb8]"
+                  className="font-medium text-[#ffa7b3] hover:text-[#ff9fb8]"
                 >
                   Passwort vergessen?
                 </Link>
@@ -146,10 +146,10 @@ export default function SignInPage() {
                 type="submit"
                 disabled={loading}
                 className={`group relative flex w-full justify-center rounded-md border border-transparent ${
-                  loading ? "bg-gray-300" : "bg-[#FFB5C7]"
+                  loading ? "bg-gray-300" : "bg-[#ffa7b3]"
                 } px-4 py-2 text-sm font-medium text-white ${
                   loading ? "cursor-not-allowed" : "hover:bg-[#ff9fb8]"
-                } focus:outline-none focus:ring-2 focus:ring-[#FFB5C7] focus:ring-offset-2`}
+                } focus:outline-none focus:ring-2 focus:ring-[#ffa7b3] focus:ring-offset-2`}
               >
                 {loading ? "Loading..." : "Login"}
               </button>

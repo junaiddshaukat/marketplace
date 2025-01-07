@@ -158,7 +158,7 @@ export default function AddAd() {
   }
 
   if (!isLoggedIn) {
-    return <div>Please log in to create an ad.</div>; // Show a message if the user is not logged in
+    return <div>please log in to create an ad.</div>; // Show a message if the user is not logged in
   }
 
   return (

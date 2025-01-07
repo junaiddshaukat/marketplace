@@ -3,6 +3,14 @@
 @tailwind utilities;
 
 
+:root {
+  --font-urbanist: 'Urbanist', sans-serif;
+}
+body {
+  font-family: var(--font-urbanist), Arial, sans-serif;
+}
+
+
 @keyframes fadeInOut {
     0%, 100% { opacity: 0.5; }
     50% { opacity: 1; }

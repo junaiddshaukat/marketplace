@@ -88,7 +88,7 @@ export default function NavBar() {
   // }
 
   return (
-    <nav className="sticky top-0 z-50 border-b bg-white">
+    <nav className="sticky top-0 z-50 border-b shadow-sm bg-white">
       <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2">
           <Image 
@@ -122,13 +122,13 @@ export default function NavBar() {
             {isLoggedIn ? (
               <>
                 <Link href="/dashboard">
-                  <button className="text-[#FFB5C7] hover:text-[#ff9fb8]">
+                  <button className="text-[#ffa7b3] hover:text-[#ff9fb8]">
                     Dashboard
                   </button>
                 </Link>
                 <button 
                   onClick={handleLogout}
-                  className="rounded-full bg-[#FFB5C7] px-6 py-2 text-white hover:bg-[#ff9fb8]"
+                  className="rounded-full bg-[#ffa7b3] px-6 py-2 text-white hover:bg-[#ff9fb8]"
                 >
                   Log Out
                 </button>
@@ -136,12 +136,12 @@ export default function NavBar() {
             ) : (
               <>
                 <Link href="/login">
-                  <button className="text-[#FFB5C7] hover:text-[#ff9fb8]">
+                  <button className="text-[#ffa7b3] hover:text-[#ff9fb8]">
                     Log In
                   </button>
                 </Link>
                 <Link href="/register">
-                  <button className="rounded-full bg-[#FFB5C7] px-6 py-2 text-white hover:bg-[#ff9fb8]">
+                  <button className="rounded-full bg-[#ffa7b3] px-6 py-2 text-white hover:bg-[#ff9fb8]">
                     Sign Up
                   </button>
                 </Link>

@@ -22,7 +22,7 @@ export const accessTokenOption: ITokenOption = {
   expires: new Date(Date.now() + accessTokenExpire * 60 * 1000), // 365 days
   maxAge: accessTokenExpire * 60 * 1000,
   httpOnly: true,
-  sameSite: "none", // Needed for cross-origin requests
+  sameSite: "lax", // Needed for cross-origin requests
   secure: process.env.NODE_ENV === "production", // Secure cookies for HTTPS in production
 };
 

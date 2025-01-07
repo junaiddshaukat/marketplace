@@ -179,7 +179,7 @@ export default function VerifyPage() {
           
           <div className="mt-6 flex justify-center">
             <div className="relative h-20 w-20 rounded-full bg-[#FFE6F0] p-5">
-              <Mail className="h-10 w-10 text-[#FFB5C7]" />
+              <Mail className="h-10 w-10 text-[#ffa7b3]" />
             </div>
           </div>
 
@@ -206,7 +206,7 @@ export default function VerifyPage() {
                 onPaste={handlePaste}
                 className={`h-16 w-16 rounded-xl border-2 bg-white text-center text-2xl font-semibold 
                   ${error ? 'border-red-500 bg-red-50' : 'border-gray-200'} 
-                  focus:border-[#FFB5C7] focus:outline-none focus:ring-2 focus:ring-[#FFB5C7] focus:ring-opacity-50`}
+                  focus:border-[#ffa7b3] focus:outline-none focus:ring-2 focus:ring-[#ffa7b3] focus:ring-opacity-50`}
                 required
                 aria-label={`Digit ${index + 1}`}
               />
@@ -223,7 +223,7 @@ export default function VerifyPage() {
             <button
               type="submit"
               disabled={isLoading || code.some(digit => !digit)}
-              className="group relative flex w-full justify-center rounded-lg bg-[#FFB5C7] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#ff9fb8] focus:outline-none focus:ring-2 focus:ring-[#FFB5C7] focus:ring-offset-2 disabled:opacity-50"
+              className="group relative flex w-full justify-center rounded-lg bg-[#ffa7b3] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#ff9fb8] focus:outline-none focus:ring-2 focus:ring-[#ffa7b3] focus:ring-offset-2 disabled:opacity-50"
             >
               {isLoading ? 'Verifying...' : 'Verify Email'}
             </button>

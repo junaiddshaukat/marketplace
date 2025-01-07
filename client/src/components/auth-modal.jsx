@@ -53,7 +53,7 @@ export default function AuthModal({ onClose, returnUrl }) {
             <input
               type="email"
               required
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-[#FFB5C7] focus:outline-none focus:ring-1 focus:ring-[#FFB5C7]"
+              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-[#ffa7b3] focus:outline-none focus:ring-1 focus:ring-[#ffa7b3]"
             />
           </div>
 
@@ -64,7 +64,7 @@ export default function AuthModal({ onClose, returnUrl }) {
             <input
               type="password"
               required
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-[#FFB5C7] focus:outline-none focus:ring-1 focus:ring-[#FFB5C7]"
+              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-[#ffa7b3] focus:outline-none focus:ring-1 focus:ring-[#ffa7b3]"
             />
           </div>
 
@@ -76,7 +76,7 @@ export default function AuthModal({ onClose, returnUrl }) {
               <input
                 type="password"
                 required
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-[#FFB5C7] focus:outline-none focus:ring-1 focus:ring-[#FFB5C7]"
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-[#ffa7b3] focus:outline-none focus:ring-1 focus:ring-[#ffa7b3]"
               />
             </div>
           )}
@@ -84,7 +84,7 @@ export default function AuthModal({ onClose, returnUrl }) {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full rounded-lg bg-[#FFB5C7] px-4 py-2 text-white transition-colors hover:bg-[#ff9fb8] disabled:opacity-50"
+            className="w-full rounded-lg bg-[#ffa7b3] px-4 py-2 text-white transition-colors hover:bg-[#ff9fb8] disabled:opacity-50"
           >
             {isLoading
               ? 'Loading...'
@@ -97,7 +97,7 @@ export default function AuthModal({ onClose, returnUrl }) {
         <div className="mt-4 text-center text-sm">
           <button
             onClick={() => setIsLogin(!isLogin)}
-            className="text-[#FFB5C7] hover:underline"
+            className="text-[#ffa7b3] hover:underline"
           >
             {isLogin
               ? "Don't have an account? Sign up"

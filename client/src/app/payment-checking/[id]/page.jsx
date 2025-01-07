@@ -27,10 +27,10 @@ const verifyPayment = async (id) => {
 
 const CustomLoader = () => (
   <div className="flex flex-col items-center justify-center h-screen bg-[#FFE6F0]">
-    <div className="text-[#FFB5C7] text-4xl font-bold mb-8 text-center">
+    <div className="text-[#ffa7b3] text-4xl font-bold mb-8 text-center">
       Please wait for your payment verification
     </div>
-    <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#FFB5C7]"></div>
+    <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#ffa7b3]"></div>
   </div>
 );
 

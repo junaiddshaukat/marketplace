@@ -18,7 +18,7 @@ export default function CategorySection() {
         {categories.map((category) => (
           <div
             key={category.name}
-            className="flex min-w-[100px] cursor-pointer flex-col items-center gap-2 transition hover:opacity-80"
+            className="flex min-w-[100px] cursor-pointer flex-col items-center gap-2 "
           >
               <span className="text-lg font-bold text-gray-600">{category.name}</span>
             <Link  href={`/all-products?category=${encodeURIComponent(category.name)}`}   className="rounded-full p-4 ">
@@ -27,7 +27,7 @@ export default function CategorySection() {
                 alt={category.name}
                 width={70}
                 height={70}
-                className=" bg-transparent object-contain"
+                className=" bg-transparent object-contain transition ease-in-out hover:scale-110"
               />
             </Link>
           </div>

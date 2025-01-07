@@ -83,7 +83,7 @@ export default function ForgetPassword() {
                 required
                 value={formData.name}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#FFB5C7] focus:outline-none focus:ring-1 focus:ring-[#FFB5C7]"
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#ffa7b3] focus:outline-none focus:ring-1 focus:ring-[#ffa7b3]"
               />
             </div>
             <div>
@@ -97,7 +97,7 @@ export default function ForgetPassword() {
                 required
                 value={formData.email}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#FFB5C7] focus:outline-none focus:ring-1 focus:ring-[#FFB5C7]"
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[#ffa7b3] focus:outline-none focus:ring-1 focus:ring-[#ffa7b3]"
               />
             </div>
           </div>
@@ -105,7 +105,7 @@ export default function ForgetPassword() {
           <button
             type="submit"
             disabled={isLoading}
-            className="group relative flex w-full justify-center rounded-md bg-[#FFB5C7] px-4 py-2 text-sm font-semibold text-white hover:bg-[#ff9fb8] focus:outline-none focus:ring-2 focus:ring-[#FFB5C7] focus:ring-offset-2 disabled:opacity-50"
+            className="group relative flex w-full justify-center rounded-md bg-[#ffa7b3] px-4 py-2 text-sm font-semibold text-white hover:bg-[#ff9fb8] focus:outline-none focus:ring-2 focus:ring-[#ffa7b3] focus:ring-offset-2 disabled:opacity-50"
           >
             {isLoading ? "Sending..." : "Send Reset Link"}
           </button>
