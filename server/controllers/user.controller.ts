@@ -32,8 +32,14 @@ interface IRegisterionBody{
     password:string,
     avatar?:string,
     contactInformation: {
-        email: string,
-        phone: string,
+      email: {
+        value: string;
+        visibility: 'private' | 'public';
+    };
+    phone: {
+        value: string;
+        visibility: 'private' | 'public';
+    };
         address: string,
         location: string,
         website: string ,
@@ -45,6 +51,8 @@ export const registrationUser = CatchAsyncErrore(async (req: Request, res: Respo
      
 
         const { name, email, password ,contactInformation} = req.body.user;
+        console.log(req.body.user);
+        
    
        
         const isEmailExist = await userModel.findOne({ email });
@@ -127,8 +135,14 @@ export const activateUser=CatchAsyncErrore(async(req:Request,res:Response,next:N
             password:string,
             avatar?:string,
             contactInformation: {
-                email: string,
-                phone: string,
+              email: {
+                value: string;
+                visibility: 'private' | 'public';
+            };
+            phone: {
+                value: string;
+                visibility: 'private' | 'public';
+            };
                 address: string,
                 location: string,
                 website: string ,
@@ -139,7 +153,7 @@ export const activateUser=CatchAsyncErrore(async(req:Request,res:Response,next:N
 
         const{activation_token,activation_code}=req.body;
         
-
+console.log(req.body)
         const newUser:{user:IUser;activecode:string}=jwt.verify(
             activation_token,
             process.env.JWTKEY as Secret
@@ -475,38 +489,6 @@ export const getUserById = CatchAsyncErrore(
 
 
 
-// export const updateUserContactInformation = async (req: Request, res: Response, next: NextFunction) => {
-//     try {
-//       const userId = req.user?._id?.toString();
-//       if (!userId) {
-//         return next(new ErroreHandler('User ID is missing', 400));
-//       }
-  
-//       const { contactInformation } = req.body;
-  
-//       const user = await userModel.findById(userId);
-//       if (!user) {
-//         return next(new ErroreHandler('User not found', 404));
-//       }
-  
-//       user.contactInformation = {
-//         ...user.contactInformation,
-//         ...contactInformation,
-//       };
-  
-//       await user.save();
-//       redis.set(userId,JSON.stringify(user))
-  
-//       res.status(200).json({
-//         success: true,
-//         message: 'Contact information updated successfully',
-//       });
-//     } catch (err: any) {
-//       return next(new ErroreHandler(err.message || 'Internal Server Error', 500));
-//     }
-//   };
-  
-
 
 export const updateUserContactInformation = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -746,9 +728,10 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
 
     // Update the user's password
     existingUser.password = newpassword;
-
+const userId=existingUser._id
     // Save the updated user object to the database
     await existingUser.save();
+    await redis.set(userId as string,JSON.stringify(existingUser))
 
     // Return a response indicating success
     res.status(200).json({

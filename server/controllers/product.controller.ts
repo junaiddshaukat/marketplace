@@ -3,10 +3,12 @@ import productModel from "../Models/product.model";
 import ErroreHandler from "../utils/ErroreHandler";
 import { v2 as cloudinary } from "cloudinary";
 import multer, { StorageEngine } from "multer";
+import { IProductAd } from "../Models/product.model";
 import dotenv from "dotenv";
 import { buffer } from "stream/consumers";
 import { CatchAsyncErrore } from "../middleware/catchAsyncErrors";
 import userModel, { IUser } from "../Models/user.model";
+import { redis } from "../utils/redis";
 dotenv.config()
 
 
@@ -214,6 +216,11 @@ export const getInActiveAds= async (req: Request, res: Response,next:NextFunctio
 }
 
 
+
+
+
+
+
 export const getActiveAds = async (req: Request, res: Response,next:NextFunction): Promise<void> => {
   try {
     const postedBy = req.user?._id // Assuming `req.user` is populated by your middleware
@@ -296,64 +303,94 @@ export const activateAd = async (req: Request, res: Response,next:NextFunction) 
 
 
 
-// export const toggleLike = async (req: Request, res: Response,next:NextFunction) => {
-//   try {
-//     const { productId } = req.params;
-//     const currentUserEmail = req.user?.email as string; // Assume `req.user` is populated by isAuthenticated middleware
 
-//     const product = await productModel.findById(productId);
 
-//     if (!product) {
-//       return res.status(404).json({ success: false, message: "Product not found." });
-//     }
-
-//     const emailIndex = product.likes.indexOf(currentUserEmail);
-
-//     if (emailIndex !== -1) {
-//       // If email exists, remove it (dislike)
-//       product.likes.splice(emailIndex, 1);
-//       await product.save();
-//       return res.status(200).json({ success: false, message: "You disliked successfully." });
-//     } else {
-//       // If email does not exist, add it (like)
-//       product.likes.push(currentUserEmail);
-//       await product.save();
-//       return res.status(200).json({ success: true, message: "You liked successfully." });
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ success: false, message: "Server error." });
-//   }
-// };
-
-export const toggleLike = async (req: Request, res: Response, next: NextFunction) : Promise<any> => {
+export const toggleLike = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
   try {
-    const { productId } = req.params;
-    const currentUserEmail = req.body.email;  // Assume `req.user` is populated by isAuthenticated middleware
+    const  _id  = req.params.productId as string;
+    const currentUserEmail = req.body.email; // Assume `req.user` is populated by isAuthenticated middleware
 
-
-    const product = await productModel.findById(productId);
+    // Find the product by ID
+    const product = await productModel.findOne({_id}) as IProductAd;
+    
 
     if (!product) {
-      return res.status(404).json({ success: false, message: "Product not found." });
+      return  next(new ErroreHandler("Product not found",400))
     }
 
-    // Fix the issue: search for the actual email, not a string template
+    // Find the user by their email
+    const user = await userModel.findOne({ email: currentUserEmail }) as IUser;
+
+    if (!user) {
+      return  next(new ErroreHandler("User not found",400))
+    }
+
+    // Handle likes array for the product
     const emailIndex = product.likes.indexOf(currentUserEmail);
 
     if (emailIndex !== -1) {
-      // If email exists, remove it (dislike)
+      // Remove email from likes array (dislike)
       product.likes.splice(emailIndex, 1);
+
+      // Remove productId from user's favorites array
+      const favoriteIndex = user.favorites.indexOf(_id);
+      if (favoriteIndex !== -1) {
+        user.favorites.splice(favoriteIndex, 1);
+      }
+
       await product.save();
-      return res.status(200).json({ success: false, message: "You disliked successfully." });
+      await user.save();
+
+      return res.status(200).json({ success: true, message: "You disliked and removed from favorites successfully." });
     } else {
-      // If email does not exist, add it (like)
+      // Add email to likes array (like)
       product.likes.push(currentUserEmail);
+
+      // Add productId to user's favorites array
+      if (!user.favorites.includes(_id)) {
+        user.favorites.push(_id);
+      }
+
       await product.save();
-      return res.status(200).json({ success: true, message: "You liked successfully." });
+      await user.save();
+
+      return res.status(200).json({ success: true, message: "You liked and added to favorites successfully." });
     }
   } catch (error) {
     console.error(error);
     return res.status(500).json({ success: false, message: "Server error." });
+  }
+};
+
+export const getFavoriteAds = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const userId = req.user?._id; // Assuming `req.user` is populated by your middleware
+
+    if (!userId) {
+      return next(new ErroreHandler("Please Login Your Account", 400));
+    }
+
+    // Fetch the current user to get their favorites array
+    const currentUser = await userModel.findById(userId) as IUser;
+
+    if (!currentUser) {
+      return next(new ErroreHandler("User not found", 404));
+    }
+
+    // Fetch all ads and ensure they're typed correctly
+    const allAds = await productModel.find() as IProductAd[];
+
+    // Filter ads based on the user's favorites
+    const favoriteAds = allAds.filter((ad) =>
+      currentUser.favorites.includes(ad._id.toString()) // Convert _id to string
+    );
+
+    res.status(200).json({favoriteAds,useremail:currentUser.email});
+  } catch (error: any) {
+    return next(new ErroreHandler(error.message, 400));
   }
 };

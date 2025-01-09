@@ -36,11 +36,11 @@ export const createGateaway = CatchAsyncErrore(
       
       const amount = 2500;
       const currency = 'CHF';
-      const successRedirectUrl = `https://mama-marketplace.vercel.app/payment-checking/${userId}`;
+      const successRedirectUrl = `http:localhost:3000/payment-checking/${userId}`;
 
    
-      const cancelRedirectUrl = `https://mama-marketplace.vercel.app/payment-cancel/${userId}`;
-      const failedRedirectUrl = `https://mama-marketplace.vercel.app/payment-cancel/${userId}`;
+      const cancelRedirectUrl = `http:localhost:3000/payment-cancel/${userId}`;
+      const failedRedirectUrl = `http:localhost:3000/payment-cancel/${userId}`;
       // console.log(amount, currency);
       const response = await payrexx.createGateway({ amount, currency,successRedirectUrl,cancelRedirectUrl,failedRedirectUrl });
      

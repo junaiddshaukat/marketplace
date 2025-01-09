@@ -6,8 +6,8 @@ import toast from 'react-hot-toast';
 export default function ContactInformation() {
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
-    phone: '',
+    email: { value: '', visibility: 'private' },
+    phone: { value: '', visibility: 'private' },
     address: '',
     location: '',
     website: '',
@@ -27,8 +27,14 @@ export default function ContactInformation() {
         const { contactInformation, name } = response.data.session;
         setFormData({
           name: name || '',
-          email: contactInformation?.email || '',
-          phone: contactInformation?.phone || '',
+          email: {
+            value: contactInformation?.email?.value || '',
+            visibility: contactInformation?.email?.visibility || 'private',
+          },
+          phone: {
+            value: contactInformation?.phone?.value || '',
+            visibility: contactInformation?.phone?.visibility || 'private',
+          },
           address: contactInformation?.address || '',
           location: contactInformation?.location || '',
           website: contactInformation?.website || '',
@@ -42,8 +48,8 @@ export default function ContactInformation() {
   const validate = () => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = 'Please fill in your name.';
-    if (!formData.email.trim()) newErrors.email = 'Please fill in the email address.';
-    if (!formData.phone.trim()) newErrors.phone = 'Please fill in the phone number.';
+    if (!formData.email.value.trim()) newErrors.email = 'Please fill in the email address.';
+    if (!formData.phone.value.trim()) newErrors.phone = 'Please fill in the phone number.';
     if (!formData.location.trim()) newErrors.location = 'Please fill in the location.';
     if (!formData.address.trim()) newErrors.address = 'Please fill in the address.';
     setErrors(newErrors);
@@ -56,8 +62,8 @@ export default function ContactInformation() {
 
     try {
       const response = await axios.put(
-       `${process.env.NEXT_PUBLIC_API_URL}/user/updateUserContactInformation`,
-        { 
+        `${process.env.NEXT_PUBLIC_API_URL}/user/updateUserContactInformation`,
+        {
           name: formData.name,
           contactInformation: {
             email: formData.email,
@@ -65,7 +71,7 @@ export default function ContactInformation() {
             address: formData.address,
             location: formData.location,
             website: formData.website,
-          }
+          },
         },
         {
           headers: {
@@ -75,15 +81,12 @@ export default function ContactInformation() {
         }
       );
       if (response.data.success) {
-        // alert('Contact information updated successfully');
         toast.success('Contact information updated successfully');
       } else {
-        // alert('Failed to update contact information');
         toast.error('Failed to update contact information');
       }
     } catch (error) {
       console.error('Error updating contact information:', error);
-      // alert(error.message);
       toast.error(error.message);
     }
   };
@@ -98,7 +101,6 @@ export default function ContactInformation() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="rounded-lg bg-white p-6 shadow-sm">
-          {/* Name field */}
           <div className="mb-6">
             <label className="mb-2 block text-sm font-medium text-gray-700">
               Name <span className="text-red-500">*</span>
@@ -116,18 +118,52 @@ export default function ContactInformation() {
             )}
           </div>
 
-          {[
-            { field: 'email', label: 'Email Address' },
-            { field: 'phone', label: 'Phone Number' },
-            { field: 'location', label: 'Location' },
-            { field: 'address', label: 'Address' },
-          ].map(({ field, label }) => (
+          {[{ field: 'email', label: 'Email Address' }, { field: 'phone', label: 'Phone Number' }].map(({ field, label }) => (
+            <div className="mb-6" key={field}>
+              <label className="mb-2 block text-sm font-medium text-gray-700">
+                {label} <span className="text-red-500">*</span>
+              </label>
+              <div className="flex space-x-2">
+                <input
+                  type="text"
+                  value={formData[field].value}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      [field]: { ...formData[field], value: e.target.value },
+                    })
+                  }
+                  className={`flex-grow rounded-lg border ${
+                    errors[field] ? 'border-red-500' : 'border-gray-300'
+                  } px-4 py-2 focus:border-[#9DD5E3] focus:outline-none`}
+                />
+                <select
+                  value={formData[field].visibility}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      [field]: { ...formData[field], visibility: e.target.value },
+                    })
+                  }
+                  className="rounded-lg border border-gray-300 px-4 py-2 focus:border-[#9DD5E3] focus:outline-none"
+                >
+                  <option value="private">Private</option>
+                  <option value="public">Public</option>
+                </select>
+              </div>
+              {errors[field] && (
+                <p className="text-red-500 text-sm mt-1">{errors[field]}</p>
+              )}
+            </div>
+          ))}
+
+          {[{ field: 'location', label: 'Location' }, { field: 'address', label: 'Address' }].map(({ field, label }) => (
             <div className="mb-6" key={field}>
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 {label} <span className="text-red-500">*</span>
               </label>
               <input
-                type={field === 'email' ? 'email' : 'text'}
+                type="text"
                 value={formData[field]}
                 onChange={(e) => setFormData({ ...formData, [field]: e.target.value })}
                 className={`w-full rounded-lg border ${
@@ -140,7 +176,6 @@ export default function ContactInformation() {
             </div>
           ))}
 
-          {/* Website (Optional) */}
           <div className="mb-6">
             <label className="mb-2 block text-sm font-medium text-gray-700">
               Website (Optional)
@@ -164,4 +199,3 @@ export default function ContactInformation() {
     </div>
   );
 }
-

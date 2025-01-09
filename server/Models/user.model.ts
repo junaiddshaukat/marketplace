@@ -22,12 +22,19 @@ export interface IUser extends Document {
     paymentExpiryDate?: Date;
     paymentStatus?: string;
     contactInformation?: {
-        email?: string;
-        phone?: string;
+        email?: {
+            value: string;
+            visibility: 'public' | 'private';
+        };
+        phone?: {
+            value: string;
+            visibility: 'public' | 'private';
+        };
         address?: string;
         location?: string;
         website?: string;
     };
+    favorites: string[];
     comparePassword: (password: string) => Promise<boolean>;
     signaccesstoken: () => string;
     signrefreshtoken: () => string;
@@ -82,18 +89,32 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
         },
         contactInformation: {
             email: {
-                type: String,
-                required: false,
-                validate: {
-                    validator: function (value: string) {
-                        return emailRegexPattern.test(value);
+                value: {
+                    type: String,
+                    required: false,
+                    validate: {
+                        validator: function (value: string) {
+                            return emailRegexPattern.test(value);
+                        },
+                        message: "Please enter a valid email",
                     },
-                    message: "Please enter a valid email",
+                },
+                visibility: {
+                    type: String,
+                    enum: ["public", "private"],
+                    default: "public",
                 },
             },
             phone: {
-                type: String,
-                required: false,
+                value: {
+                    type: String,
+                    required: false,
+                },
+                visibility: {
+                    type: String,
+                    enum: ["public", "private"],
+                    default: "public",
+                },
             },
             address: {
                 type: String,
@@ -107,7 +128,13 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
                 type: String,
                 required: false,
             },
+           
         },
+
+        favorites: {
+            type: [String], // Array of user emails
+            default: [],
+          },
     },
     { timestamps: true }
 );

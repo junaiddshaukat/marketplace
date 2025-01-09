@@ -28,8 +28,14 @@ export default function RegisterForm() {
       _confirmEmail: "",
       _confirmPassword: "",
       contactInformation: {
-        email: "",
-        phone: "",
+        email: {
+          value: "",
+          visibility: "private"
+        },
+        phone: {
+          value: "",
+          visibility: "private"
+        },
         address: "",
         location: "",
         website: "",
@@ -37,7 +43,6 @@ export default function RegisterForm() {
     },
   });
 
-  // Keeping all the existing validation functions
   const validateEmail = () => {
     if (formData.user.email !== formData.user._confirmEmail) {
       setErrors((prev) => ({
@@ -70,15 +75,22 @@ export default function RegisterForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name.includes(".")) {
+    
+    if (name.includes("contactInformation")) {
       const [section, subsection, field] = name.split(".");
       setFormData((prev) => ({
         ...prev,
-        [section]: {
-          ...prev[section],
-          [subsection]: field
-            ? { ...prev[section][subsection], [field]: value }
-            : value,
+        user: {
+          ...prev.user,
+          contactInformation: {
+            ...prev.user.contactInformation,
+            [subsection]: field
+              ? {
+                  ...prev.user.contactInformation[subsection],
+                  [field]: value,
+                }
+              : value,
+          },
         },
       }));
     } else {
@@ -90,12 +102,34 @@ export default function RegisterForm() {
         },
       }));
     }
+    
+    // Clear the specific field error
     setFieldErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
+  const handleVisibilityChange = (e, field) => {
+    const { value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      user: {
+        ...prev.user,
+        contactInformation: {
+          ...prev.user.contactInformation,
+          [field]: {
+            ...prev.user.contactInformation[field],
+            visibility: value
+          }
+        }
+      }
+    }));
+  };
+
   const validateField = (name, value) => {
-    if (value.trim() === "") {
-      setFieldErrors((prev) => ({ ...prev, [name]: "This field is required" }));
+    if (!value || (typeof value === 'string' && value.trim() === "")) {
+      const errorKey = name.includes("contactInformation") 
+        ? `user.${name}`
+        : name;
+      setFieldErrors((prev) => ({ ...prev, [errorKey]: "This field is required" }));
       return false;
     }
     return true;
@@ -103,27 +137,28 @@ export default function RegisterForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFieldErrors({});
 
     const isEmailValid = validateEmail();
     const isPasswordValid = validatePassword();
 
     let isFormValid = isEmailValid && isPasswordValid;
 
+    // Validate all required fields
     const requiredFields = [
-      "user.name",
-      "user.email",
-      "user.password",
-      "user._confirmEmail",
-      "user._confirmPassword",
-      "user.contactInformation.email",
-      "user.contactInformation.phone",
-      "user.contactInformation.address",
-      "user.contactInformation.location",
+      { name: "name", value: formData.user.name },
+      { name: "email", value: formData.user.email },
+      { name: "password", value: formData.user.password },
+      { name: "_confirmEmail", value: formData.user._confirmEmail },
+      { name: "_confirmPassword", value: formData.user._confirmPassword },
+      { name: "contactInformation.email.value", value: formData.user.contactInformation.email.value },
+      { name: "contactInformation.phone.value", value: formData.user.contactInformation.phone.value },
+      { name: "contactInformation.address", value: formData.user.contactInformation.address },
+      { name: "contactInformation.location", value: formData.user.contactInformation.location },
     ];
 
-    requiredFields.forEach((field) => {
-      const value = field.split(".").reduce((obj, key) => obj[key], formData);
-      if (!validateField(field, value)) {
+    requiredFields.forEach(({ name, value }) => {
+      if (!validateField(name, value)) {
         isFormValid = false;
       }
     });
@@ -139,7 +174,13 @@ export default function RegisterForm() {
           name: formData.user.name,
           email: formData.user.email,
           password: formData.user.password,
-          contactInformation: formData.user.contactInformation,
+          contactInformation: {
+            email: formData.user.contactInformation.email,
+            phone: formData.user.contactInformation.phone,
+            address: formData.user.contactInformation.address,
+            location: formData.user.contactInformation.location,
+            website: formData.user.contactInformation.website || "",
+          },
         },
       };
 
@@ -246,14 +287,14 @@ export default function RegisterForm() {
                           name="name"
                           required
                           className={`w-full p-2.5 border rounded-lg  focus:border-pink-500 ${
-                            fieldErrors["user.name"] ? "border-red-500" : "border-gray-300"
+                            fieldErrors["name"] ? "border-red-500" : "border-gray-300"
                           }`}
                           value={formData.user.name}
                           onChange={handleChange}
                         />
-                        {fieldErrors["user.name"] && (
+                        {fieldErrors["name"] && (
                           <p className="text-red-500 text-sm mt-1">
-                            {fieldErrors["user.name"]}
+                            {fieldErrors["name"]}
                           </p>
                         )}
                       </div>
@@ -269,7 +310,7 @@ export default function RegisterForm() {
                               name="password"
                               required
                               className={`w-full p-2.5 border rounded-lg  focus:border-pink-500 ${
-                                fieldErrors["user.password"] ? "border-red-500" : "border-gray-300"
+                                fieldErrors["password"] ? "border-red-500" : "border-gray-300"
                               }`}
                               value={formData.user.password}
                               onChange={handleChange}
@@ -286,9 +327,9 @@ export default function RegisterForm() {
                               )}
                             </button>
                           </div>
-                          {fieldErrors["user.password"] && (
+                          {fieldErrors["password"] && (
                             <p className="text-red-500 text-sm mt-1">
-                              {fieldErrors["user.password"]}
+                              {fieldErrors["password"]}
                             </p>
                           )}
                           {errors.password && (
@@ -306,14 +347,14 @@ export default function RegisterForm() {
                             name="_confirmPassword"
                             required
                             className={`w-full p-2.5 border rounded-lg  focus:border-pink-500 ${
-                              fieldErrors["user._confirmPassword"] ? "border-red-500" : "border-gray-300"
+                              fieldErrors["_confirmPassword"] ? "border-red-500" : "border-gray-300"
                             }`}
                             value={formData.user._confirmPassword}
                             onChange={handleChange}
                           />
-                          {fieldErrors["user._confirmPassword"] && (
+                          {fieldErrors["_confirmPassword"] && (
                             <p className="text-red-500 text-sm mt-1">
-                              {fieldErrors["user._confirmPassword"]}
+                              {fieldErrors["_confirmPassword"]}
                             </p>
                           )}
                         </div>
@@ -329,14 +370,14 @@ export default function RegisterForm() {
                             name="email"
                             required
                             className={`w-full p-2.5 border rounded-lg  focus:border-pink-500 ${
-                              fieldErrors["user.email"] ? "border-red-500" : "border-gray-300"
+                              fieldErrors["email"] ? "border-red-500" : "border-gray-300"
                             }`}
                             value={formData.user.email}
                             onChange={handleChange}
                           />
-                          {fieldErrors["user.email"] && (
+                          {fieldErrors["email"] && (
                             <p className="text-red-500 text-sm mt-1">
-                              {fieldErrors["user.email"]}
+                              {fieldErrors["email"]}
                             </p>
                           )}
                           {errors.email && (
@@ -355,14 +396,14 @@ export default function RegisterForm() {
                             name="_confirmEmail"
                             required
                             className={`w-full p-2.5 border rounded-lg  focus:border-pink-500 ${
-                              fieldErrors["user._confirmEmail"] ? "border-red-500" : "border-gray-300"
+                              fieldErrors["_confirmEmail"] ? "border-red-500" : "border-gray-300"
                             }`}
                             value={formData.user._confirmEmail}
                             onChange={handleChange}
                           />
-                          {fieldErrors["user._confirmEmail"] && (
+                          {fieldErrors["_confirmEmail"] && (
                             <p className="text-red-500 text-sm mt-1">
-                              {fieldErrors["user._confirmEmail"]}
+                              {fieldErrors["_confirmEmail"]}
                             </p>
                           )}
                         </div>
@@ -380,19 +421,29 @@ export default function RegisterForm() {
                         <label className="block mb-1 font-medium">
                           Email <span className="text-red-500">*</span>
                         </label>
-                        <input
-                          type="email"
-                          name="user.contactInformation.email"
-                          required
-                          className={`w-full p-2.5 border rounded-lg  focus:border-pink-500 ${
-                            fieldErrors["user.contactInformation.email"] ? "border-red-500" : "border-gray-300"
-                          }`}
-                          value={formData.user.contactInformation.email}
-                          onChange={handleChange}
-                        />
-                        {fieldErrors["user.contactInformation.email"] && (
+                        <div className="flex items-center space-x-2">
+                          <input
+                            type="email"
+                            name="contactInformation.email.value"
+                            required
+                            className={`flex-grow p-2.5 border rounded-lg focus:border-pink-500 ${
+                              fieldErrors["user.contactInformation.email.value"] ? "border-red-500" : "border-gray-300"
+                            }`}
+                            value={formData.user.contactInformation.email.value}
+                            onChange={handleChange}
+                          />
+                          <select
+                            className="p-2.5 border border-gray-300 rounded-lg focus:border-pink-500"
+                            value={formData.user.contactInformation.email.visibility}
+                            onChange={(e) => handleVisibilityChange(e, "email")}
+                          >
+                            <option value="private">Private</option>
+                            <option value="public">Public</option>
+                          </select>
+                        </div>
+                        {fieldErrors["user.contactInformation.email.value"] && (
                           <p className="text-red-500 text-sm mt-1">
-                            {fieldErrors["user.contactInformation.email"]}
+                            {fieldErrors["user.contactInformation.email.value"]}
                           </p>
                         )}
                       </div>
@@ -400,19 +451,29 @@ export default function RegisterForm() {
                         <label className="block mb-1 font-medium">
                           Phone <span className="text-red-500">*</span>
                         </label>
-                        <input
-                          type="tel"
-                          name="user.contactInformation.phone"
-                          required
-                          className={`w-full p-2.5 border rounded-lg  focus:border-pink-500 ${
-                            fieldErrors["user.contactInformation.phone"] ? "border-red-500" : "border-gray-300"
-                          }`}
-                          value={formData.user.contactInformation.phone}
-                          onChange={handleChange}
-                        />
-                        {fieldErrors["user.contactInformation.phone"] && (
+                        <div className="flex items-center space-x-2">
+                          <input
+                            type="tel"
+                            name="contactInformation.phone.value"
+                            required
+                            className={`flex-grow p-2.5 border rounded-lg focus:border-pink-500 ${
+                              fieldErrors["user.contactInformation.phone.value"] ? "border-red-500" : "border-gray-300"
+                            }`}
+                            value={formData.user.contactInformation.phone.value}
+                            onChange={handleChange}
+                          />
+                          <select
+                            className="p-2.5 border border-gray-300 rounded-lg focus:border-pink-500"
+                            value={formData.user.contactInformation.phone.visibility}
+                            onChange={(e) => handleVisibilityChange(e, "phone")}
+                          >
+                            <option value="private">Private</option>
+                            <option value="public">Public</option>
+                          </select>
+                        </div>
+                        {fieldErrors["user.contactInformation.phone.value"] && (
                           <p className="text-red-500 text-sm mt-1">
-                            {fieldErrors["user.contactInformation.phone"]}
+                            {fieldErrors["user.contactInformation.phone.value"]}
                           </p>
                         )}
                       </div>
@@ -422,9 +483,9 @@ export default function RegisterForm() {
                         </label>
                         <input
                           type="text"
-                          name="user.contactInformation.address"
+                          name="contactInformation.address"
                           required
-                          className={`w-full p-2.5 border rounded-lg  focus:border-pink-500 ${
+                          className={`w-full p-2.5 border rounded-lg focus:border-pink-500 ${
                             fieldErrors["user.contactInformation.address"] ? "border-red-500" : "border-gray-300"
                           }`}
                           value={formData.user.contactInformation.address}
@@ -442,9 +503,9 @@ export default function RegisterForm() {
                         </label>
                         <input
                           type="text"
-                          name="user.contactInformation.location"
+                          name="contactInformation.location"
                           required
-                          className={`w-full p-2.5 border rounded-lg  focus:border-pink-500 ${
+                          className={`w-full p-2.5 border rounded-lg focus:border-pink-500 ${
                             fieldErrors["user.contactInformation.location"] ? "border-red-500" : "border-gray-300"
                           }`}
                           value={formData.user.contactInformation.location}
@@ -456,16 +517,16 @@ export default function RegisterForm() {
                           </p>
                         )}
                       </div>
-                      {/* <div>
+                      <div>
                         <label className="block mb-1 font-medium">Website</label>
                         <input
                           type="url"
-                          name="user.contactInformation.website"
-                          className="w-full p-2.5 border border-gray-300 rounded-lg  focus:border-pink-500"
+                          name="contactInformation.website"
+                          className="w-full p-2.5 border border-gray-300 rounded-lg focus:border-pink-500"
                           value={formData.user.contactInformation.website}
                           onChange={handleChange}
                         />
-                      </div> */}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -475,7 +536,7 @@ export default function RegisterForm() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="px-6 py-2.5 bg-pink-600 text-white rounded-lg hover:bg-pink-700 focus:outline-none  focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="px-6 py-2.5 bg-pink-600 text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   {isLoading ? "Processing..." : "Register"}
                 </button>

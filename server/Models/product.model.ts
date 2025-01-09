@@ -1,8 +1,11 @@
 import express from "express";
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, {Types, Document, Schema } from "mongoose";
 
 // Define the ProductAd interface
-interface IProductAd extends Document {
+ export interface IProductAd extends Document {
+  
+  _id: string | Types.ObjectId;
+
   title: string;
   description: string;
   price: number;
@@ -23,6 +26,7 @@ interface IProductAd extends Document {
 
 // Define the schema
 const productAdSchema = new mongoose.Schema<IProductAd>({
+
   title: {
     type: String,
     required: true,
