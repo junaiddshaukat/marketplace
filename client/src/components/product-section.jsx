@@ -71,9 +71,9 @@ export default function ProductSection({ title, products }) {
   }
 
   return (
-    <div className="mb-12 rounded-3xl bg-[#F8FAFF] p-8">
-      <div className="mb-8 flex items-center justify-between">
-        <h2 className="text-2xl font-medium text-[#4A5567]">{title}</h2>
+    <div className="mb-12 rounded-3xl bg-[#e8f5f9] p-4 sm:p-6 md:p-8">
+      <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between">
+        <h2 className="text-xl sm:text-2xl font-medium text-[#4A5567] mb-2 sm:mb-0">{title}</h2>
         <Link
           href={`/all-products?category=${encodeURIComponent(title)}`}
           className="flex items-center text-sm text-[#4A5567] hover:text-gray-900"
@@ -82,53 +82,53 @@ export default function ProductSection({ title, products }) {
           <span className="ml-1">»</span>
         </Link>
       </div>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
         {products.map((product) => (
           <div
             key={product._id}
             onClick={() => window.location.href = `/product-details/${product._id}`}
-            className="group overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-200 hover:shadow-md cursor-pointer"
+            className="group overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-200 hover:shadow-md cursor-pointer flex flex-col"
           >
-            <div className="relative">
+            <div className="relative flex-shrink-0">
               <button
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
                   handleLikeClick(product._id)
                 }}
-                className="absolute right-3 top-3 z-10 rounded-full bg-white p-2 shadow-sm transition-transform duration-200 hover:scale-110"
+                className="absolute right-6 top-6 z-10 rounded-xl bg-white p-2 shadow-sm transition-transform duration-200 hover:scale-110"
               >
                 <Heart
-                  className={`h-5 w-5 transition-all duration-300 ease-in-out ${
+                  className={`h-4 w-4 transition-all duration-300 ease-in-out ${
                     likedProducts.includes(product._id)
                       ? 'fill-[#FF6B8B] stroke-[#FF6B8B]'
                       : 'fill-transparent stroke-[#9CA5B4] hover:stroke-[#4A5567]'
                   }`}
                 />
               </button>
-              <Image
-                src={product.images[0]}
-                alt={product.title}
-                width={300}
-                height={200}
-                className="h-52 w-full object-cover"
-              />
+              <div className='p-4'>
+                <Image
+                  src={product.images[0]}
+                  alt={product.title}
+                  width={300}
+                  height={200}
+                  className="h-48 w-full rounded-2xl object-cover"
+                />
+              </div>
             </div>
-            <div className="p-5">
-              <h3 className="mb-2 text-lg font-medium text-[#4A5567]">{product.title}</h3>
-              <p className="mb-3 text-lg font-bold text-[#FF6B8B]">CHF {product.price.toFixed(2)}</p>
-              <p className="mb-4 text-sm leading-relaxed text-[#9CA5B4]">{product.description}</p>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center rounded-full bg-[#FFE6F0] px-3 py-1.5">
-                    <MapPin className="w-3 h-4 mr-1 text-[#FF6B8B]" />
-                    <span className="text-sm font-medium text-[#FF6B8B]">{product.location}</span>
-                  </div>
+            <div className="p-4 pt-0 flex flex-col flex-grow">
+              <h3 className=" text-lg font-medium text-[#4A5567]">{product.title}</h3>
+              <p className="mb-1 text-lg font-bold text-[#FF6B8B]">CHF {product.price.toFixed(2)}</p>
+              <p className="mb-4 text-sm leading-relaxed text-[#9CA5B4] flex-grow">{product.description}</p>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                <div className="flex items-center rounded-full bg-[#FFE6F0] px-3 py-1.5">
+                  <MapPin className="w-3 h-4 mr-1 text-[#FF6B8B]" />
+                  <span className="text-sm font-medium text-[#FF6B8B]">{product.location}</span>
                 </div>
                 <Link
                   href={`/product-details/${product._id}`}
                   onClick={(e) => e.stopPropagation()}
-                  className="rounded-full bg-[#E6F0FF] px-5 py-1.5 text-sm font-medium text-[#6B9FFF] transition-all duration-200 hover:bg-[#d9e7ff]"
+                  className="rounded-full bg-[#E6F0FF] px-5 py-1.5 text-sm font-medium text-[#6B9FFF] transition-all duration-200 hover:bg-[#d9e7ff] w-full sm:w-auto text-center"
                 >
                   Details anzeigen
                 </Link>
