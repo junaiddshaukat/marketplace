@@ -39,7 +39,7 @@ export default function ProductPage() {
       });
       setIsLoggedIn(response.data.success || false);
       setCurrentUser(response.data.session);
-      setHasPayment(response.data.session?.payment_obj_id !== null);
+      setHasPayment(response.data.session?.paymentStatus === 'active');
     } catch (error) {
       console.error("Error fetching user details:", error);
       setIsLoggedIn(false);

@@ -249,7 +249,7 @@ export const activateAd = async (req: Request, res: Response,next:NextFunction) 
     const { adId } = req.params;
     const userId = req.user?._id;
     const user=await userModel.findById(userId) as IUser
-    const paymentId=user?.payment_obj_id as string
+    const paymentId=user?.paymentStatus as string
   
 
 
@@ -259,7 +259,7 @@ export const activateAd = async (req: Request, res: Response,next:NextFunction) 
       return next(new ErroreHandler("User not authenticated",400))
     }
 
-    if (user.payment_obj_id === undefined) {
+    if (user.paymentStatus != "active") {
       return res.status(200).json({ 
         success: false, 
         message: 'Please pay for Activate your Add', 

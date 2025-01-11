@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 export default function Subscription() {
   const [isRedirectLoading, setIsRedirectLoading] = useState(false);
   const [userId, setUserId] = useState(null);
+  const [name, setname] = useState('');
   const router = useRouter();
 
   // Function to fetch user data
@@ -18,7 +19,8 @@ export default function Subscription() {
         withCredentials: true,
       });
       const userData = response.data.session;
-      setUserId(userData._id); // Save user ID
+      setUserId(userData.payment_obj_id); // Save user ID
+      setname(userData.name || 'User'); // Save name
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -40,8 +42,8 @@ export default function Subscription() {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/payment/getSubscription`, { id: userId });
       console.log(response);
       
-      if (response.data.link) {
-        router.push(response.data.link);
+      if (response.data) {
+        router.push(response.data);
       } else {
         console.error('No redirect link received');
       }
@@ -62,18 +64,29 @@ export default function Subscription() {
       'Featured Listings',
       'Ad Boost',
     ],
-    button: 'You are the Premium User',
+    button: 'Manage Subscription',
     buttonStyle: 'bg-[#9DD5E3] hover:bg-[#8bc5d3] text-white',
   };
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Subscription</h1>
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-8 text-center">Your Subscription</h1>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <div className="rounded-xl bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-lg font-semibold">Your Plan</h2>
-          <div className="space-y-3">
+      <div className="grid gap-8 md:grid-cols-2">
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div className="bg-gradient-to-r from-[#9DD5E3] to-[#FF9EAA] p-6 text-white">
+            <h2 className="text-2xl font-bold mb-2">Account Information</h2>
+            <p className="opacity-90">Welcome back, {name}!</p>
+          </div>
+          <div className="p-6 space-y-4">
+            <div>
+              <p className="text-sm text-gray-600">name</p>
+              <p className="font-medium">{name}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">User ID</p>
+              <p className="font-medium">{userId || 'Loading...'}</p>
+            </div>
             <div>
               <p className="text-sm text-gray-600">Current Plan</p>
               <p className="font-medium">{plan.name}</p>
@@ -84,25 +97,22 @@ export default function Subscription() {
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="mt-8">
-        <h2 className="mb-4 text-xl font-semibold">Plan Details</h2>
-        <div className="overflow-hidden rounded-xl bg-white shadow-sm">
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           <div className="bg-gradient-to-r from-[#9DD5E3] to-[#FF9EAA] p-6 text-white">
-            <h3 className="text-2xl font-bold">{plan.name}</h3>
-            <p className="mt-2 opacity-90">Your current subscription plan</p>
+            <h2 className="text-2xl font-bold mb-2">{plan.name} Plan</h2>
+            <p className="opacity-90">Your current subscription</p>
           </div>
           <div className="p-6">
-            <p className="text-center">
-              <span className="text-4xl font-bold">CHF {plan.price}</span>
+            <p className="text-center mb-6">
+              <span className="text-5xl font-bold">CHF {plan.price}</span>
               <span className="text-gray-600">/year</span>
             </p>
-            <ul className="mt-6 space-y-4">
+            <ul className="space-y-3 mb-6">
               {plan.features.map((feature) => (
                 <li key={feature} className="flex items-center">
                   <svg
-                    className="h-5 w-5 text-green-500 mr-2"
+                    className="h-5 w-5 text-green-500 mr-3 flex-shrink-0"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -110,12 +120,12 @@ export default function Subscription() {
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  {feature}
+                  <span>{feature}</span>
                 </li>
               ))}
             </ul>
             <button
-              className={`mt-8 w-full rounded-lg px-6 py-3 font-medium transition-colors duration-200 ${plan.buttonStyle}`}
+              className={`w-full rounded-lg px-6 py-3 font-medium transition-colors duration-200 ${plan.buttonStyle}`}
               onClick={handleRedirect}
               disabled={isRedirectLoading}
             >
@@ -124,6 +134,22 @@ export default function Subscription() {
           </div>
         </div>
       </div>
+
+      <div className="mt-8 bg-white rounded-2xl shadow-lg p-6">
+        <h2 className="text-2xl font-bold mb-4">Subscription Benefits</h2>
+        <p className="text-gray-600 mb-4">
+          As a Premium subscriber, you enjoy exclusive benefits that enhance your experience on our platform. 
+          Here's what you get with your current plan:
+        </p>
+        <ul className="list-disc pl-5 space-y-2 text-gray-600">
+          <li>Post unlimited ads to reach a wider audience</li>
+          <li>Access our secure marketplace for safe transactions</li>
+          <li>Enjoy full access to all platform features</li>
+          <li>Get your listings featured for increased visibility</li>
+          <li>Boost your ads to appear at the top of search results</li>
+        </ul>
+      </div>
     </div>
   );
 }
+

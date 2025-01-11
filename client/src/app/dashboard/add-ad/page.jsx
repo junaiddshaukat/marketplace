@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Upload, X } from "lucide-react";
+import { Upload, X } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Image from "next/image";
+
 export default function AddAd() {
   const router = useRouter();
 
@@ -34,7 +35,7 @@ export default function AddAd() {
       });
       console.log();
       setIsLoggedIn(response.data.success);
-      if (response.data.session.payment_obj_id === undefined) {
+      if (response.data.session.paymentStatus != "active") {
         setisUserpaid(false);
       }
 
@@ -51,26 +52,6 @@ export default function AddAd() {
   useEffect(() => {
     fetchUserDetails(); // Call fetchUserDetails when the component mounts
   }, [fetchUserDetails]);
-
-  // Function to get the current location of the user
-  const getLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLocation(
-            `${position.coords.latitude}, ${position.coords.longitude}`
-          );
-        },
-        (error) => {
-          console.error("Error fetching location:", error);
-          setLocation("Unknown"); // Fallback if location is unavailable
-        }
-      );
-    } else {
-      console.log("Geolocation is not supported by this browser.");
-      setLocation("Unknown"); // Fallback
-    }
-  };
 
   // Function to calculate the expiry date (365 days from now)
   const calculateExpiryDate = () => {
@@ -89,7 +70,7 @@ export default function AddAd() {
         const dataToSubmit = {
           title,
           category,
-          location, // Use the location fetched from the user's device
+          location,
           price,
           description,
           images, // Base64 images array
@@ -111,7 +92,6 @@ export default function AddAd() {
         console.log("Ad created successfully:", response.data);
         router.push("/dashboard/my-ads");
       } else {
-        // alert("Please pay to create a post")
         toast.error("Please pay to create a post");
       }
     } catch (error) {
@@ -207,14 +187,40 @@ export default function AddAd() {
                 <label className="mb-2 block text-sm font-medium text-gray-700">
                   Location
                 </label>
-                <input
-                  type="text"
+                <select
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   className="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-[#9DD5E3] focus:outline-none"
-                  placeholder="Enter location"
                   required
-                />
+                >
+                  <option value="">Select a canton</option>
+                  <option value="Aargau">Aargau</option>
+                  <option value="Appenzell Ausserrhoden">Appenzell Ausserrhoden</option>
+                  <option value="Appenzell Innerrhoden">Appenzell Innerrhoden</option>
+                  <option value="Basel-Landschaft">Basel-Landschaft</option>
+                  <option value="Basel-Stadt">Basel-Stadt</option>
+                  <option value="Bern">Bern</option>
+                  <option value="Freiburg">Freiburg</option>
+                  <option value="Genf">Genf</option>
+                  <option value="Glarus">Glarus</option>
+                  <option value="Graubünden">Graubünden</option>
+                  <option value="Jura">Jura</option>
+                  <option value="Luzern">Luzern</option>
+                  <option value="Neuenburg">Neuenburg</option>
+                  <option value="Nidwalden">Nidwalden</option>
+                  <option value="Obwalden">Obwalden</option>
+                  <option value="Schaffhausen">Schaffhausen</option>
+                  <option value="Schwyz">Schwyz</option>
+                  <option value="Solothurn">Solothurn</option>
+                  <option value="St. Gallen">St. Gallen</option>
+                  <option value="Tessin">Tessin</option>
+                  <option value="Thurgau">Thurgau</option>
+                  <option value="Uri">Uri</option>
+                  <option value="Waadt">Waadt</option>
+                  <option value="Wallis">Wallis</option>
+                  <option value="Zug">Zug</option>
+                  <option value="Zürich">Zürich</option>
+                </select>
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-gray-700">
@@ -309,3 +315,4 @@ export default function AddAd() {
     </div>
   );
 }
+
