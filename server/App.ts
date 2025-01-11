@@ -7,6 +7,7 @@ import userrouter from "./routes/user-routr";
 import productAdRouter from "./routes/product-router";
 import paymentRouter from "./routes/payment-router";
 import './jobs/emailReminder'
+import webhookRouter from "./routes/webhook";
 
 // Initialize Express app
 export const app = express();
@@ -52,6 +53,9 @@ app.get("/",(req,res)=>{
 // User routes
 app.use("/user", userrouter);
 app.use("/payment", paymentRouter);
+
+app.use("/webhook", webhookRouter);
+
 // Product routes
 app.use("/product", productAdRouter);
 

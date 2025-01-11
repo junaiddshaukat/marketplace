@@ -30,11 +30,11 @@ export default function RegisterForm() {
       contactInformation: {
         email: {
           value: "",
-          visibility: "private"
+          visibility: "public"
         },
         phone: {
           value: "",
-          visibility: "private"
+          visibility: "public"
         },
         address: "",
         location: "",
@@ -213,7 +213,7 @@ export default function RegisterForm() {
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <Link
-            href="/back"
+            href="/"
             className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900"
           >
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -437,8 +437,9 @@ export default function RegisterForm() {
                             value={formData.user.contactInformation.email.visibility}
                             onChange={(e) => handleVisibilityChange(e, "email")}
                           >
+                           <option value="public">Public</option>
                             <option value="private">Private</option>
-                            <option value="public">Public</option>
+                           
                           </select>
                         </div>
                         {fieldErrors["user.contactInformation.email.value"] && (
@@ -467,8 +468,9 @@ export default function RegisterForm() {
                             value={formData.user.contactInformation.phone.visibility}
                             onChange={(e) => handleVisibilityChange(e, "phone")}
                           >
-                            <option value="private">Private</option>
+                         
                             <option value="public">Public</option>
+                            <option value="private">Private</option>
                           </select>
                         </div>
                         {fieldErrors["user.contactInformation.phone.value"] && (

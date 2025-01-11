@@ -1,4 +1,57 @@
+'use client';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+
 export default function Subscription() {
+  const [isRedirectLoading, setIsRedirectLoading] = useState(false);
+  const [userId, setUserId] = useState(null);
+  const router = useRouter();
+
+  // Function to fetch user data
+  const fetchUserData = async () => {
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/me`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        withCredentials: true,
+      });
+      const userData = response.data.session;
+      setUserId(userData._id); // Save user ID
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData(); // Fetch user data when the component mounts
+  }, []);
+
+  const handleRedirect = async () => {
+    setIsRedirectLoading(true);
+    try {
+      if (!userId) {
+        console.error('User ID not found');
+        setIsRedirectLoading(false);
+        return;
+      }
+
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/payment/getSubscription`, { id: userId });
+      console.log(response);
+      
+      if (response.data.link) {
+        router.push(response.data.link);
+      } else {
+        console.error('No redirect link received');
+      }
+    } catch (error) {
+      console.error('Error during redirect:', error?.response?.data?.message || error.message);
+    } finally {
+      setIsRedirectLoading(false);
+    }
+  };
+
   const plan = {
     name: 'Premium',
     price: '25',
@@ -11,33 +64,13 @@ export default function Subscription() {
     ],
     button: 'You are the Premium User',
     buttonStyle: 'bg-[#9DD5E3] hover:bg-[#8bc5d3] text-white',
-  }
+  };
 
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Subscription</h1>
 
       <div className="grid gap-6 md:grid-cols-2">
-        {/* Account Info */}
-        {/* <div className="rounded-xl bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-lg font-semibold">My Account</h2>
-          <div className="space-y-3">
-            <div>
-              <p className="text-sm text-gray-600">Name</p>
-              <p className="font-medium">John Doe</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Email</p>
-              <p className="font-medium">john.doe@example.com</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Member Since</p>
-              <p className="font-medium">January 1, 2023</p>
-            </div>
-          </div>
-        </div> */}
-
-        {/* Current Plan */}
         <div className="rounded-xl bg-white p-6 shadow-sm">
           <h2 className="mb-4 text-lg font-semibold">Your Plan</h2>
           <div className="space-y-3">
@@ -49,15 +82,10 @@ export default function Subscription() {
               <p className="text-sm text-gray-600">Billing Cycle</p>
               <p className="font-medium">Yearly</p>
             </div>
-            {/* <div>
-              <p className="text-sm text-gray-600">Next Billing Date</p>
-              <p className="font-medium">July 1, 2023</p>
-            </div> */}
           </div>
         </div>
       </div>
 
-      {/* Plan Details */}
       <div className="mt-8">
         <h2 className="mb-4 text-xl font-semibold">Plan Details</h2>
         <div className="overflow-hidden rounded-xl bg-white shadow-sm">
@@ -73,7 +101,13 @@ export default function Subscription() {
             <ul className="mt-6 space-y-4">
               {plan.features.map((feature) => (
                 <li key={feature} className="flex items-center">
-                  <svg className="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <svg
+                    className="h-5 w-5 text-green-500 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
                   {feature}
@@ -82,13 +116,14 @@ export default function Subscription() {
             </ul>
             <button
               className={`mt-8 w-full rounded-lg px-6 py-3 font-medium transition-colors duration-200 ${plan.buttonStyle}`}
+              onClick={handleRedirect}
+              disabled={isRedirectLoading}
             >
-              {plan.button}
+              {isRedirectLoading ? 'Redirecting...' : plan.button}
             </button>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
-

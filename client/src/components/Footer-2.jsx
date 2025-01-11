@@ -1,23 +1,31 @@
 import Link from 'next/link'
 
-export function Footer2() {
+export default function Footer() {
   return (
-    <footer className="bg-white shadow-sm mt-auto">
-      <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center">
-          <div className="text-sm text-gray-500">
-            © 2023 Your Company. All rights reserved.
-          </div>
-          <div className="flex space-x-6">
-            <Link href="/terms" className="text-sm text-gray-500 hover:text-gray-900">
-              Terms
-            </Link>
-            <Link href="/privacy" className="text-sm text-gray-500 hover:text-gray-900">
-              Privacy
-            </Link>
-            <Link href="/contact" className="text-sm text-gray-500 hover:text-gray-900">
-              Contact
-            </Link>
+    <footer className="border-t bg-white">
+      <div className="mx-auto max-w-7xl px-4 py-6">
+        <div className="flex flex-col items-center space-y-4 md:flex-row md:justify-between md:space-y-0">
+          <nav>
+            <ul className="flex space-x-4 text-sm text-gray-600">
+              <li>
+                <Link href="/" className="hover:text-gray-900">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link href="/all-products" className="hover:text-gray-900">
+                 Products
+                </Link>
+              </li>
+              <li>
+                <Link href="/subscription" className="hover:text-gray-900">
+                  Subscription
+                </Link>
+              </li>
+            </ul>
+          </nav>
+          <div className="text-sm text-gray-600">
+            © {new Date().getFullYear()} Mama Marketplace. Alle Rechte vorbehalten.
           </div>
         </div>
       </div>

@@ -78,8 +78,32 @@ export default function ContactModal({ isOpen, onClose, isLoggedIn, owner }) {
             <div className="space-y-4">
               {owner?.email && (
                 <div className="flex flex-col gap-1">
-                  <span className="text-sm text-gray-500">Email</span>
-                  <span className="font-medium">{owner.email}</span>
+                    
+                    {owner?.contactInformation?.email?.visibility === "public"  ? (
+  <>
+    <div className="flex flex-col gap-1">
+      <span className="text-sm text-gray-500">Email</span>
+      <span className="font-medium">{owner.contactInformation.email.value}</span>
+    </div>
+   
+  </>
+) : (
+  <span className="text-sm text-gray-500">User email  is private</span>
+)}
+
+
+{owner?.contactInformation?.phone?.visibility === "public"  ? (
+  <>
+   
+    <div className="flex flex-col gap-1">
+      <span className="text-sm text-gray-500">Phone</span>
+      <span className="font-medium">{owner.contactInformation.phone.value}</span>
+    </div>
+  </>
+) : (
+  <span className="text-sm text-gray-500">User  phone is private</span>
+)}
+
                 </div>
               )}
               {owner?.phone && (

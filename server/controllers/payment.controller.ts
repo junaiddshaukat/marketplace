@@ -24,6 +24,24 @@ export const getGateaway = CatchAsyncErrore(
     }
   }
 )
+export const getSubscription = CatchAsyncErrore(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const subscriptionId = parseInt(req.body.id, 10)
+      console.log(subscriptionId)
+      console.log(typeof(subscriptionId))
+      const response = await payrexx.getSubscription(subscriptionId);
+      if(response.data.data[0].link !== undefined){
+      res.status(200).json(response.data.data[0].link);}
+      else{
+        res.status(500).json({ success: false, message: 'Subscription not found' });
+      }
+    }
+    catch (error:any) {
+      res.status(500).json({ success: false, message: 'Subscription not found' });
+    } 
+  }
+)
 
 export const createGateaway = CatchAsyncErrore( 
   async (req:Request, res:Response)=>{
@@ -36,13 +54,18 @@ export const createGateaway = CatchAsyncErrore(
       
       const amount = 2500;
       const currency = 'CHF';
-      const successRedirectUrl = `http:localhost:3000/payment-checking/${userId}`;
+      const subscriptionState = true;
+      const subscriptionInterval = 'P1Y'
+      const subscriptionPeriod = 'P1Y'
+      const subscriptionCancellationInterval = 'P1M'
+      const referenceId = userId;
+      const purpose = 'MaMa Marketplace subscription for 1 year';
 
-   
-      const cancelRedirectUrl = `http:localhost:3000/payment-cancel/${userId}`;
-      const failedRedirectUrl = `http:localhost:3000/payment-cancel/${userId}`;
+      const successRedirectUrl = `http://localhost:3000/payment-checking/${userId}`;
+      const cancelRedirectUrl = `http://localhost:3000/payment-cancel/${userId}`;
+      const failedRedirectUrl = `http://localhost:3000/payment-cancel/${userId}`;
       // console.log(amount, currency);
-      const response = await payrexx.createGateway({ amount, currency,successRedirectUrl,cancelRedirectUrl,failedRedirectUrl });
+      const response = await payrexx.createGateway({ referenceId,purpose,subscriptionCancellationInterval,subscriptionPeriod,subscriptionInterval,subscriptionState ,amount, currency,successRedirectUrl,cancelRedirectUrl,failedRedirectUrl });
      
 
       // Adjust for array or object response
@@ -156,7 +179,6 @@ export const paymentchecker = async (req: Request, res: Response, next: NextFunc
   try {
     const userId = req.body.id;
     // console.log('User ID:', userId);
-
     const user = await userModel.findById(userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -170,19 +192,19 @@ export const paymentchecker = async (req: Request, res: Response, next: NextFunc
     const response = await payrexx.getGateway(parseInt(gatewayId, 10));
     // console.log('API Response:', util.inspect(response, { depth: null, colors: true }));
 
-    const transactions = response?.data?.data?.[0]?.invoices?.[0]?.transactions?.[0];
-    if (!transactions) {
+    const subscriptions = response?.data?.data?.[0]?.invoices?.[0]?.transactions?.[0].subscription;
+    if (!subscriptions) {
       return res.status(400).json({ message: 'Transaction data is missing' });
     }
 
-    const transactionId = transactions.id as string;
-    const transactionStatus = transactions.status?.toLowerCase();
+    const transactionId = subscriptions.contact.id as string;
+    const transactionStatus = subscriptions.status?.toLowerCase();
     // console.log('Transaction Status:', transactionStatus);
 
-    if (transactionStatus === 'confirmed') {
+    if (transactionStatus === 'active') {
       const updateResult = await userModel.findByIdAndUpdate(userId, {
         payment_obj_id: transactionId,
-        paymentStatus: 'confirmed',
+        paymentStatus: 'active',
         paymentDate: new Date(),
         paymentExpiryDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
       });

@@ -6,19 +6,17 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import MobileMenu from './mobile-menu'
 import axios from 'axios'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux'
 import { userLoggedIn } from '../app/redux/features/auth/authSlice'
-import { useLoginMutation } from '../app/redux/features/auth/authApi';
-import Loader from "../components/Loader"
-  
+import CategoryDropdown from './category-dropdown'
 
 export default function NavBar() {
-  const dispatch = useDispatch();
-  const {user} = useSelector((state) => state.auth); // Access the user state
+  const dispatch = useDispatch()
+  const {user} = useSelector((state) => state.auth)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
-  const isInitialMount = useRef(true);
+  const isInitialMount = useRef(true)
 
   const fetchUserDetails = useCallback(async () => {
     try {
@@ -27,31 +25,28 @@ export default function NavBar() {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         withCredentials: true,
-      });
+      })
       setIsLoggedIn(response.data.success)
-
-        // console.log('dispach chalne laga ha');
       
-            dispatch(
-              userLoggedIn({
-                user: response.data.user,
-                token: response.data.accessToken,
-              })
-            );
+      dispatch(
+        userLoggedIn({
+          user: response.data.user,
+          token: response.data.accessToken,
+        })
+      )
     } catch (error) {
-    
       setIsLoggedIn(false)
     } finally {
       setIsLoading(false)
     }
-  }, []);
+  }, [dispatch])
 
   useEffect(() => {
     if (isInitialMount.current) {
-      isInitialMount.current = false;
-      fetchUserDetails();
+      isInitialMount.current = false
+      fetchUserDetails()
     }
-  }, [fetchUserDetails]);
+  }, [fetchUserDetails])
 
   const handleLogout = async () => {
     try {
@@ -60,7 +55,7 @@ export default function NavBar() {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         withCredentials: true,
-      });
+      })
 
       if (response.data.success) {
         localStorage.removeItem("token")
@@ -70,25 +65,14 @@ export default function NavBar() {
         console.error('Logout failed:', response.data.message)
       }
     } catch (error) {
-      if (error.response) {
-        console.error("Logout Error:", error.response.data);
-      } else if (error.request) {
-        console.error("No Response:", error.request);
-      } else {
-        console.error("Request Error:", error.message);
-      }
       localStorage.removeItem("token")
       setIsLoggedIn(false)
       router.push('/')
     }
   }
 
-  // if (isLoading) {
-  //   return <div ></div> // Or a more sophisticated loading component Loading...
-  // }
-
   return (
-    <nav className="sticky top-0 z-50 border-b shadow-sm bg-white">
+    <nav className="sticky top-0 z-50 border-b bg-white ">
       <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2">
           <Image 
@@ -98,23 +82,18 @@ export default function NavBar() {
             height={200} 
             className="rounded-full"
           />
-          {/* <span className="text-xl font-semibold text-gray-700">Mama Marketplace</span> */}
         </Link>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex md:items-center md:gap-8">
-          <Link href="/" className="text-gray-600 hover:text-gray-900">
-            Home
+          <Link href="/" className="text-[#FF9FB8] hover:text-[#ff8da8]">
+            Startseite
           </Link>
-          <Link href="/all-products" className="text-gray-600 hover:text-gray-900">
-            Products
+          <CategoryDropdown />
+          <Link href="/all-products" className="text-[#FF9FB8] hover:text-[#ff8da8]">
+            Alle Produkte
           </Link>
-          {/* <Link href="/about" className="text-gray-600 hover:text-gray-900">
-            About Us
-          </Link> */}
-          <Link href="/subscription" className="text-gray-600 hover:text-gray-900">
-           Subscription
-          </Link>
+       
         </div>
 
         <div className="flex items-center gap-4">
@@ -136,13 +115,13 @@ export default function NavBar() {
             ) : (
               <>
                 <Link href="/login">
-                  <button className="text-[#ffa7b3] hover:text-[#ff9fb8]">
-                    Log In
+                  <button className="rounded-full border border-[#FF9FB8] px-6 py-2 text-[#FF9FB8] hover:bg-[#FF9FB8] hover:text-white">
+                    Login
                   </button>
                 </Link>
                 <Link href="/register">
-                  <button className="rounded-full bg-[#ffa7b3] px-6 py-2 text-white hover:bg-[#ff9fb8]">
-                    Sign Up
+                  <button className="rounded-full bg-[#9CD7E3] px-6 py-2 text-white hover:bg-[#8cc8d4]">
+                    Registrieren
                   </button>
                 </Link>
               </>

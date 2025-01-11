@@ -9,7 +9,9 @@ interface PayrexxParams {
   [key: string]: any;
   ApiSignature?: string;
 }
-
+interface AuthTokenParams {
+  userId: number; // Contact ID received from webhook
+}
 export class PayrexxService {
   private instance: string;
   private secret: string;
@@ -52,6 +54,38 @@ export class PayrexxService {
     console.log(url);
     return axios.post(url);
   }
+  public async getSubscription(id: number): Promise<AxiosResponse> {
+    if (!id || id <= 0) {
+        throw new Error('userId must be a valid positive integer!');
+    }
+
+    // Define body parameters for the request
+    const bodyParams = {
+        userId: id,
+        instance: "nicolasgrimm", // Replace with actual instance fetching logic
+    };
+
+    // Serialize the parameters to x-www-form-urlencoded format
+    const queryStr = qs.stringify(bodyParams);
+
+    // Construct the final URL
+    const url = this.buildBaseUrl('AuthToken/');
+
+    try {
+        // Send POST request with correct content-type and API secret in headers
+        return await axios.post(url, queryStr, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-API-KEY': process.env.PAYREXX_API_KEY || 'Vk63GZvmlGAAF9KeNgLzfurXGvxn0s', // Replace with environment variable or securely stored value
+            },
+        });
+    } catch (error) {
+        console.error('Error occurred while fetching subscription:', error);
+        throw error;
+    }
+}
+
+
   public async createSubscription(params: PayrexxParams): Promise<AxiosResponse> {
     if (!params.amount) {
       throw new Error('Amount is required!');

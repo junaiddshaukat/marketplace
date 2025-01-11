@@ -25,14 +25,9 @@ export default function MobileMenu({ isLoggedIn, handleLogout }) {
               Home
             </Link>
             <Link href="/all-products" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-              Products
+              All Products
             </Link>
-            <Link href="/about" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-              About Us
-            </Link>
-            <Link href="/subscription" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-              Subscription
-            </Link>
+            
             {isLoggedIn ? (
               <>
                 <Link href="/dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">

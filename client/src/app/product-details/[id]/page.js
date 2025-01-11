@@ -102,7 +102,7 @@ export default function ProductPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-12 pt-6">
+    <div className="min-h-screen mt-8 bg-white pb-12 pt-6">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-2">
           {/* Left Column - Image Gallery */}
@@ -118,9 +118,7 @@ export default function ProductPage() {
                 <button onClick={handleShareClick} className="rounded-full p-2 hover:bg-gray-100">
                   <Share2 className="h-5 w-5 text-gray-400" />
                 </button>
-                <button className="rounded-full p-2 hover:bg-gray-100">
-                  <MoreVertical className="h-5 w-5 text-gray-400" />
-                </button>
+                
               </div>
             </div>
 

@@ -2,10 +2,11 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react'
+import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react'
 
 export default function ImageGallery({ images }) {
   const [currentImage, setCurrentImage] = useState(0)
+  const [isZoomed, setIsZoomed] = useState(false)
 
   const nextImage = () => {
     setCurrentImage((prev) => (prev + 1) % images.length)
@@ -13,6 +14,10 @@ export default function ImageGallery({ images }) {
 
   const previousImage = () => {
     setCurrentImage((prev) => (prev - 1 + images.length) % images.length)
+  }
+
+  const toggleZoom = () => {
+    setIsZoomed((prev) => !prev)
   }
 
   return (
@@ -41,30 +46,42 @@ export default function ImageGallery({ images }) {
 
       {/* Main Image */}
       <div className="relative flex-1">
-        <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-100">
+        <div className={`relative aspect-square overflow-hidden rounded-lg bg-gray-100 ${isZoomed ? 'cursor-zoom-out' : 'cursor-zoom-in'}`}>
           <Image
             src={images[currentImage]}
             alt={`Product image ${currentImage + 1}`}
             fill
-            className="object-cover"
+            className={`object-cover transition-transform duration-300 ${isZoomed ? 'scale-150' : 'scale-100'}`}
+            onClick={toggleZoom}
           />
-          <button className="absolute right-4 top-4 rounded-full bg-white/80 p-2 text-gray-600 backdrop-blur-sm hover:bg-white">
-            <ZoomIn className="h-5 w-5" />
+          <button 
+            onClick={toggleZoom}
+            className="absolute right-4 top-4 rounded-full bg-white/80 p-2 text-gray-600 backdrop-blur-sm hover:bg-white z-10"
+          >
+            {isZoomed ? (
+              <ZoomOut className="h-5 w-5" />
+            ) : (
+              <ZoomIn className="h-5 w-5" />
+            )}
           </button>
           
           {/* Navigation Arrows */}
-          <button
-            onClick={previousImage}
-            className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 text-gray-600 backdrop-blur-sm hover:bg-white"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </button>
-          <button
-            onClick={nextImage}
-            className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 text-gray-600 backdrop-blur-sm hover:bg-white"
-          >
-            <ChevronRight className="h-5 w-5" />
-          </button>
+          {!isZoomed && (
+            <>
+              <button
+                onClick={previousImage}
+                className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 text-gray-600 backdrop-blur-sm hover:bg-white"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                onClick={nextImage}
+                className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 text-gray-600 backdrop-blur-sm hover:bg-white"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>
