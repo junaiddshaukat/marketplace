@@ -20,8 +20,11 @@ export default function CategoryDropdown() {
   return (
     <div 
       className="relative"
+      onClick={() => setIsOpen(!isOpen)}
       onMouseEnter={() => setIsOpen(true)}
-      onMouseLeave={() => setIsOpen(false)}
+      // onClickCapture={() => setIsOpen(false)
+        
+      // }
     >
       <button className="flex items-center gap-2 text-[#FF9FB8]  hover:text-[#ff8da8]">
         Kategorien

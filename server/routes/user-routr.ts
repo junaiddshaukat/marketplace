@@ -6,8 +6,8 @@ import { getGateaway,createGateaway } from "../controllers/payment.controller";
 const userrouter = express.Router();
 
 userrouter.get('/check-super-admin', isAuthenticated,checkSuperAdmin);
-userrouter.post('/registration',registrationUser);
-userrouter.post("/activate-user",activateUser,createGateaway);
+userrouter.post('/registration',registrationUser,createGateaway);
+
 userrouter.post("/login", loginUser);
 userrouter.get("/logout",isAuthenticated, logoutUser);
 userrouter.get("/me", isAuthenticated,getUser);

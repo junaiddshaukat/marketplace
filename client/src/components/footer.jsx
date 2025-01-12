@@ -10,10 +10,10 @@ export default function Footer() {
           {/* Left section */}
           <div className="max-w-md text-center md:text-left">
             <Image
-              src="https://res.cloudinary.com/junaidshaukat/image/upload/v1735666004/Untitled_design_2_uilhby.png"
+              src="https://mama-marketplace.nicolasgrimm.ch/wp-content/uploads/2024/08/Mama_Marketplace_Favicon.png"
               alt="Baby Icon"
-              width={170}
-              height={170}
+              width={50}
+              height={50}
               className="mb-4 mx-auto md:mx-0"
             />
             <p className="text-sm leading-relaxed">

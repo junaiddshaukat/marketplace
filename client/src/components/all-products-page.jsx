@@ -7,13 +7,13 @@ import { Search, ChevronDown, MapPin, X } from 'lucide-react';
 import axios from 'axios';
 import Image from 'next/image';
 
-const categories = ['Alle', 'Kinderwagen', 'Unterwegs', 'Kindersitze', 'Spielzeug', 'Ernährung', 'Wohnen', 'Bekleidung'];
+const categories = ['Kinderwagen', 'Unterwegs', 'Kindersitze', 'Spielzeug', 'Ernährung', 'Wohnen', 'Bekleidung'];
 const cities = [
-  'Alle', 'Aargau', 'Appenzell Ausserrhoden', 'Appenzell Innerrhoden', 'Basel-Landschaft', 
+  'Aargau', 'Appenzell Ausserrhoden', 'Appenzell Innerrhoden', 'Basel-Landschaft', 
   'Basel-Stadt', 'Bern', 'Freiburg', 'Genf', 'Glarus', 'Graubünden', 'Jura', 'Luzern', 
   'Neuenburg', 'Nidwalden', 'Obwalden', 'Schaffhausen', 'Schwyz', 'Solothurn', 'St. Gallen', 
   'Tessin', 'Thurgau', 'Uri', 'Waadt', 'Wallis', 'Zug', 'Zürich'
-];;
+];
 
 export default function AllProductsPage({ products = [], user }) {
   const router = useRouter();
@@ -27,7 +27,6 @@ export default function AllProductsPage({ products = [], user }) {
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [showCityDropdown, setShowCityDropdown] = useState(false);
 
-  // Initialize search parameters
   useEffect(() => {
     const category = searchParams?.get('category');
     const search = searchParams?.get('search');
@@ -41,7 +40,6 @@ export default function AllProductsPage({ products = [], user }) {
     }
   }, [searchParams]);
 
-  // Filter products based on search criteria
   useEffect(() => {
     const filtered = products.filter((product) => {
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -54,7 +52,6 @@ export default function AllProductsPage({ products = [], user }) {
     setFilteredProducts(filtered);
   }, [searchTerm, selectedCategories, selectedCities, priceMin, priceMax, products]);
 
-  // Clear all filters
   const clearFilters = () => {
     setSelectedCategories([]);
     setSelectedCities([]);
@@ -63,34 +60,20 @@ export default function AllProductsPage({ products = [], user }) {
     setSearchTerm('');
   };
 
-  // Check if any filters are active
   const hasActiveFilters = selectedCategories.length > 0 || selectedCities.length > 0 || searchTerm !== '' || priceMin !== '' || priceMax !== '';
 
-  // Handle category selection
   const handleCategoryChange = (category) => {
-    if (category === 'Alle') {
-      setSelectedCategories(selectedCategories.length === 0 ? ['Alle'] : []);
-    } else {
-      setSelectedCategories(prev => {
-        const newCategories = prev.filter(c => c !== 'Alle');
-        return newCategories.includes(category) ? newCategories.filter(c => c !== category) : [...newCategories, category];
-      });
-    }
+    setSelectedCategories(prev => 
+      prev.includes(category) ? prev.filter(c => c !== category) : [...prev, category]
+    );
   };
 
-  // Handle city selection
   const handleCityChange = (city) => {
-    if (city === 'Alle') {
-      setSelectedCities(selectedCities.length === 0 ? ['Alle'] : []);
-    } else {
-      setSelectedCities(prev => {
-        const newCities = prev.filter(c => c !== 'Alle');
-        return newCities.includes(city) ? newCities.filter(c => c !== city) : [...newCities, city];
-      });
-    }
+    setSelectedCities(prev => 
+      prev.includes(city) ? prev.filter(c => c !== city) : [...prev, city]
+    );
   };
 
-  // Handle liking a product
   const handleLike = async (productId, e) => {
     e.stopPropagation();
     try {
@@ -102,7 +85,6 @@ export default function AllProductsPage({ products = [], user }) {
           withCredentials: true
         }
       );
-      // Update local state optimistically
       setFilteredProducts(prevProducts =>
         prevProducts.map(p =>
           p.id === productId ? { ...p, isLiked: !p.isLiked } : p
@@ -117,7 +99,6 @@ export default function AllProductsPage({ products = [], user }) {
     <Suspense fallback={<div>Loading...</div>}>
       <div className="min-h-screen bg-white">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Search Bar */}
           <div className="flex gap-4 mb-8">
             <div className="flex-1 relative">
               <input
@@ -134,7 +115,6 @@ export default function AllProductsPage({ products = [], user }) {
             </button>
           </div>
 
-          {/* Title and Clear Filters */}
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-4">
               <h1 className="text-2xl text-gray-700">Produkte</h1>
@@ -150,19 +130,22 @@ export default function AllProductsPage({ products = [], user }) {
             )}
           </div>
 
-          {/* Filters */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            {/* Categories Dropdown */}
             <div className="relative">
               <button onClick={() => setShowCategoryDropdown(!showCategoryDropdown)} className="w-full rounded-lg border border-gray-200 p-3 pr-10 bg-white focus:outline-none focus:border-[#91d2e3] transition-colors text-left">
-                Kategorien ({selectedCategories.length === 0 ? 'Alle' : selectedCategories.length})
+                Kategorien ({selectedCategories.length})
               </button>
               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               {showCategoryDropdown && (
                 <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg">
                   {categories.map(category => (
                     <label key={category} className="flex items-center p-3 hover:bg-gray-100">
-                      <input type="checkbox" checked={selectedCategories.includes(category) || (category === 'Alle' && selectedCategories.length === 0)} onChange={() => handleCategoryChange(category)} className="mr-2" />
+                      <input 
+                        type="checkbox" 
+                        checked={selectedCategories.includes(category)} 
+                        onChange={() => handleCategoryChange(category)} 
+                        className="mr-2" 
+                      />
                       {category}
                     </label>
                   ))}
@@ -170,25 +153,28 @@ export default function AllProductsPage({ products = [], user }) {
               )}
             </div>
 
-            {/* Cities Dropdown */}
             <div className="relative">
               <button onClick={() => setShowCityDropdown(!showCityDropdown)} className="w-full rounded-lg border border-gray-200 p-3 pr-10 bg-white focus:outline-none focus:border-[#B4E4E8] transition-colors text-left">
-                Kanton/Ort ({selectedCities.length === 0 ? 'Alle' : selectedCities.length})
+                Kanton/Ort ({selectedCities.length})
               </button>
               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               {showCityDropdown && (
                 <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                   {cities.map(city => (
                     <label key={city} className="flex items-center p-3 hover:bg-gray-100">
-                      <input type="checkbox" checked={selectedCities.includes(city) || (city === 'Alle' && selectedCities.length === 0)} onChange={() => handleCityChange(city)} className="mr-2" />
+                      <input 
+                        type="checkbox" 
+                        checked={selectedCities.includes(city)} 
+                        onChange={() => handleCityChange(city)} 
+                        className="mr-2" 
+                      />
                       {city}
                     </label>
                   ))}
-                </div>
+                </div> 
               )}
             </div>
 
-            {/* Price Filters */}
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-600">Preis</span>
               <div className="flex items-center gap-2">
@@ -200,7 +186,6 @@ export default function AllProductsPage({ products = [], user }) {
             </div>
           </div>
 
-          {/* Products Grid */}
           <div className="bg-[#F8FDFE] p-8 rounded-xl">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {filteredProducts.map((product) => (

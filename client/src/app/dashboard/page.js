@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function Dashboard() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -11,11 +12,12 @@ export default function Dashboard() {
   const [stats, setStats] = useState([
     { title: 'Total Ads', value: 0, icon: '👥', color: 'bg-[#FF9EAA]', path: '/dashboard/my-ads' },
     { title: 'Active Ads', value: 0, icon: '📈', color: 'bg-[#9DD5E3]', path: '/dashboard/my-ads' },
-    // { title: 'Need Refresh', value: 0, icon: '🔄', color: 'bg-[#FFB84C]', path: '/dashboard/my-ads' },
     { title: 'Inactive Ads', value: 0, icon: '⭐', color: 'bg-[#FF9EAA]', path: '/dashboard/inactive' },
   ]);
   const [ads, setAds] = useState([]);
   const [activeAds, setActiveAds] = useState([]);
+
+  const router = useRouter()
 
   const fetchUserDetails = useCallback(async () => {
     try {
@@ -85,7 +87,8 @@ export default function Dashboard() {
   }
 
   if (!isLoggedIn) {
-    return <div>Please log in to view your dashboard.</div>;
+    router.push('/login');
+    return null;
   }
 
   return (

@@ -2,19 +2,17 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
 import axios from "axios";
-import { userRegistration, userTemporary } from "../redux/features/auth/authSlice";
 import toast from "react-hot-toast";
 import { Eye, EyeOff } from 'lucide-react';
 import Link from "next/link";
 
 export default function RegisterForm() {
-  const dispatch = useDispatch();
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const [errors, setErrors] = useState({
     email: "",
     password: "",
@@ -138,6 +136,7 @@ export default function RegisterForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFieldErrors({});
+    setError("");
 
     const isEmailValid = validateEmail();
     const isPasswordValid = validatePassword();
@@ -191,18 +190,16 @@ export default function RegisterForm() {
           withCredentials: true,
         }
       );
-      toast.success(response.data.message);
-      dispatch(userTemporary(response.data.user));
-      dispatch(
-        userRegistration({
-          token: response.data.activationToken,
-        })
-      );
-
-      router.push("/verify");
+      const paymentLink = response.data?.gateway?.link;
+      if (paymentLink) {
+        window.location.href = paymentLink;
+      } else {
+        setError('Payment link not provided in the response.');
+        setTimeout(() => router.push('/register'), 3000);
+      }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Something went wrong";
-      toast.error(errorMessage);
+      setError(error?.response?.data?.message || 'Something went wrong');
+      setTimeout(() => router.push('/register'), 3000);
     } finally {
       setIsLoading(false);
     }
@@ -439,7 +436,6 @@ export default function RegisterForm() {
                           >
                            <option value="public">Public</option>
                             <option value="private">Private</option>
-                           
                           </select>
                         </div>
                         {fieldErrors["user.contactInformation.email.value"] && (
@@ -468,7 +464,6 @@ export default function RegisterForm() {
                             value={formData.user.contactInformation.phone.visibility}
                             onChange={(e) => handleVisibilityChange(e, "phone")}
                           >
-                         
                             <option value="public">Public</option>
                             <option value="private">Private</option>
                           </select>
@@ -544,10 +539,16 @@ export default function RegisterForm() {
                 </button>
               </div>
             </form>
+            {error && (
+              <div className="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                {error}
+              </div>
+            )}
           </div>
         </div>
       </div>
     </div>
   );
 }
+
 

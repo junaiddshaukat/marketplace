@@ -61,9 +61,9 @@ export const createGateaway = CatchAsyncErrore(
       const referenceId = userId;
       const purpose = 'MaMa Marketplace subscription for 1 year';
 
-      const successRedirectUrl = `http://localhost:3000/payment-checking/${userId}`;
-      const cancelRedirectUrl = `http://localhost:3000/payment-cancel/${userId}`;
-      const failedRedirectUrl = `http://localhost:3000/payment-cancel/${userId}`;
+      const successRedirectUrl = `https://mama-marketplace.vercel.app/payment-checking/${userId}`;
+      const cancelRedirectUrl = `https://mama-marketplace.vercel.app/payment-cancel/${userId}`;
+      const failedRedirectUrl = `https://mama-marketplace.vercel.app/payment-cancel/${userId}`;
       // console.log(amount, currency);
       const response = await payrexx.createGateway({ referenceId,purpose,subscriptionCancellationInterval,subscriptionPeriod,subscriptionInterval,subscriptionState ,amount, currency,successRedirectUrl,cancelRedirectUrl,failedRedirectUrl });
      
