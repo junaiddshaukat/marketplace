@@ -5,7 +5,7 @@ import axios from 'axios';
 import NavBar from "../../components/navbar";
 import AllProductsPage from "../../components/all-products-page";
 import Footer from "../../components/footer";
-import Loader from "../../../components/Loader";
+import Loader from "../../components/Loader";
 
 export default function Page() {
   const [products, setProducts] = useState([]);
