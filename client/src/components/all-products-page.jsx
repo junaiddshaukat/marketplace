@@ -13,7 +13,7 @@ const cities = [
   'Basel-Stadt', 'Bern', 'Freiburg', 'Genf', 'Glarus', 'Graubünden', 'Jura', 'Luzern', 
   'Neuenburg', 'Nidwalden', 'Obwalden', 'Schaffhausen', 'Schwyz', 'Solothurn', 'St. Gallen', 
   'Tessin', 'Thurgau', 'Uri', 'Waadt', 'Wallis', 'Zug', 'Zürich'
-];
+];;
 
 export default function AllProductsPage({ products = [], user }) {
   const router = useRouter();
@@ -27,6 +27,7 @@ export default function AllProductsPage({ products = [], user }) {
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [showCityDropdown, setShowCityDropdown] = useState(false);
 
+  // Initialize search parameters
   useEffect(() => {
     const category = searchParams?.get('category');
     const search = searchParams?.get('search');
@@ -40,6 +41,7 @@ export default function AllProductsPage({ products = [], user }) {
     }
   }, [searchParams]);
 
+  // Filter products based on search criteria
   useEffect(() => {
     const filtered = products.filter((product) => {
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -52,6 +54,7 @@ export default function AllProductsPage({ products = [], user }) {
     setFilteredProducts(filtered);
   }, [searchTerm, selectedCategories, selectedCities, priceMin, priceMax, products]);
 
+  // Clear all filters
   const clearFilters = () => {
     setSelectedCategories([]);
     setSelectedCities([]);
@@ -60,53 +63,48 @@ export default function AllProductsPage({ products = [], user }) {
     setSearchTerm('');
   };
 
+  // Check if any filters are active
   const hasActiveFilters = selectedCategories.length > 0 || selectedCities.length > 0 || searchTerm !== '' || priceMin !== '' || priceMax !== '';
 
+  // Handle category selection
   const handleCategoryChange = (category) => {
     if (category === 'Alle') {
       setSelectedCategories(selectedCategories.length === 0 ? ['Alle'] : []);
     } else {
       setSelectedCategories(prev => {
         const newCategories = prev.filter(c => c !== 'Alle');
-        if (newCategories.includes(category)) {
-          return newCategories.filter(c => c !== category);
-        } else {
-          return [...newCategories, category];
-        }
+        return newCategories.includes(category) ? newCategories.filter(c => c !== category) : [...newCategories, category];
       });
     }
   };
 
+  // Handle city selection
   const handleCityChange = (city) => {
     if (city === 'Alle') {
       setSelectedCities(selectedCities.length === 0 ? ['Alle'] : []);
     } else {
       setSelectedCities(prev => {
         const newCities = prev.filter(c => c !== 'Alle');
-        if (newCities.includes(city)) {
-          return newCities.filter(c => c !== city);
-        } else {
-          return [...newCities, city];
-        }
+        return newCities.includes(city) ? newCities.filter(c => c !== city) : [...newCities, city];
       });
     }
   };
 
+  // Handle liking a product
   const handleLike = async (productId, e) => {
     e.stopPropagation();
     try {
-      const response = await axios.put(
+      await axios.put(
         `${process.env.NEXT_PUBLIC_API_URL}/product/like/${productId}`,
         { email: user.email },
         { 
-          headers: { 
-            Authorization: `Bearer ${localStorage.getItem("token")}` 
-          },
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           withCredentials: true
         }
       );
-      setFilteredProducts(prevProducts => 
-        prevProducts.map(p => 
+      // Update local state optimistically
+      setFilteredProducts(prevProducts =>
+        prevProducts.map(p =>
           p.id === productId ? { ...p, isLiked: !p.isLiked } : p
         )
       );
@@ -136,7 +134,7 @@ export default function AllProductsPage({ products = [], user }) {
             </button>
           </div>
 
-          {/* Title, Count, and Clear Filters */}
+          {/* Title and Clear Filters */}
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-4">
               <h1 className="text-2xl text-gray-700">Produkte</h1>
@@ -145,10 +143,7 @@ export default function AllProductsPage({ products = [], user }) {
               </span>
             </div>
             {hasActiveFilters && (
-              <button
-                onClick={clearFilters}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition-colors"
-              >
+              <button onClick={clearFilters} className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition-colors">
                 <X className="w-4 h-4" />
                 Filter zurücksetzen
               </button>
@@ -157,11 +152,9 @@ export default function AllProductsPage({ products = [], user }) {
 
           {/* Filters */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            {/* Categories Dropdown */}
             <div className="relative">
-              <button
-                onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
-                className="w-full rounded-lg border border-gray-200 p-3 pr-10 bg-white focus:outline-none focus:border-[#91d2e3] transition-colors text-left"
-              >
+              <button onClick={() => setShowCategoryDropdown(!showCategoryDropdown)} className="w-full rounded-lg border border-gray-200 p-3 pr-10 bg-white focus:outline-none focus:border-[#91d2e3] transition-colors text-left">
                 Kategorien ({selectedCategories.length === 0 ? 'Alle' : selectedCategories.length})
               </button>
               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -169,12 +162,7 @@ export default function AllProductsPage({ products = [], user }) {
                 <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg">
                   {categories.map(category => (
                     <label key={category} className="flex items-center p-3 hover:bg-gray-100">
-                      <input
-                        type="checkbox"
-                        checked={selectedCategories.includes(category) || (category === 'Alle' && selectedCategories.length === 0)}
-                        onChange={() => handleCategoryChange(category)}
-                        className="mr-2"
-                      />
+                      <input type="checkbox" checked={selectedCategories.includes(category) || (category === 'Alle' && selectedCategories.length === 0)} onChange={() => handleCategoryChange(category)} className="mr-2" />
                       {category}
                     </label>
                   ))}
@@ -182,11 +170,9 @@ export default function AllProductsPage({ products = [], user }) {
               )}
             </div>
 
+            {/* Cities Dropdown */}
             <div className="relative">
-              <button
-                onClick={() => setShowCityDropdown(!showCityDropdown)}
-                className="w-full rounded-lg border border-gray-200 p-3 pr-10 bg-white focus:outline-none focus:border-[#B4E4E8] transition-colors text-left"
-              >
+              <button onClick={() => setShowCityDropdown(!showCityDropdown)} className="w-full rounded-lg border border-gray-200 p-3 pr-10 bg-white focus:outline-none focus:border-[#B4E4E8] transition-colors text-left">
                 Kanton/Ort ({selectedCities.length === 0 ? 'Alle' : selectedCities.length})
               </button>
               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -194,12 +180,7 @@ export default function AllProductsPage({ products = [], user }) {
                 <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                   {cities.map(city => (
                     <label key={city} className="flex items-center p-3 hover:bg-gray-100">
-                      <input
-                        type="checkbox"
-                        checked={selectedCities.includes(city) || (city === 'Alle' && selectedCities.length === 0)}
-                        onChange={() => handleCityChange(city)}
-                        className="mr-2"
-                      />
+                      <input type="checkbox" checked={selectedCities.includes(city) || (city === 'Alle' && selectedCities.length === 0)} onChange={() => handleCityChange(city)} className="mr-2" />
                       {city}
                     </label>
                   ))}
@@ -207,25 +188,14 @@ export default function AllProductsPage({ products = [], user }) {
               )}
             </div>
 
+            {/* Price Filters */}
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-600">Preis</span>
               <div className="flex items-center gap-2">
                 <span className="text-gray-600">CHF</span>
-                <input
-                  type="number"
-                  value={priceMin}
-                  onChange={(e) => setPriceMin(e.target.value)}
-                  placeholder="Min"
-                  className="w-20 rounded-lg border border-gray-200 p-3 focus:outline-none focus:border-[#B4E4E8] transition-colors"
-                />
+                <input type="number" value={priceMin} onChange={(e) => setPriceMin(e.target.value)} placeholder="Min" className="w-20 rounded-lg border border-gray-200 p-3 focus:outline-none focus:border-[#B4E4E8] transition-colors" />
                 <span className="text-gray-600">CHF</span>
-                <input
-                  type="number"
-                  value={priceMax}
-                  onChange={(e) => setPriceMax(e.target.value)}
-                  placeholder="Max"
-                  className="w-20 rounded-lg border border-gray-200 p-3 focus:outline-none focus:border-[#B4E4E8] transition-colors"
-                />
+                <input type="number" value={priceMax} onChange={(e) => setPriceMax(e.target.value)} placeholder="Max" className="w-20 rounded-lg border border-gray-200 p-3 focus:outline-none focus:border-[#B4E4E8] transition-colors" />
               </div>
             </div>
           </div>
@@ -255,7 +225,7 @@ export default function AllProductsPage({ products = [], user }) {
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-1 px-3 py-1 bg-[#FFE5E5] text-[#FF8A8A] rounded-full text-sm">
                         <MapPin className="w-4 h-4" />
-                        <span>{product.canton} {product.location}</span>
+                        <span>{product.location}</span>
                       </div>
                       <button className="px-4 py-1 bg-[#B4E4E8] text-white rounded-full text-sm hover:bg-[#a3d3d7] transition-colors">
                         Details anzeigen
