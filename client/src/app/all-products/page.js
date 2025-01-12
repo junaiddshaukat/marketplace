@@ -1,18 +1,20 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from 'react'
-import axios from 'axios'
-import NavBar from "../../components/navbar"
-import AllProductsPage from "../../components/all-products-page"
-import Footer from "../../components/footer"
-
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import NavBar from "../../components/navbar";
+import AllProductsPage from "../../components/all-products-page";
+import Footer from "../../components/footer";
+import Loader from "../../components/loader";
 export default function Page() {
-  const [products, setProducts] = useState([])
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/product/getall-products`)
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/product/getall-products`);
         const fetchedProducts = response.data.ads
           .filter(product => product.status !== 'InActive') // Filter out 'InActive' products
           .map(product => ({
@@ -30,24 +32,37 @@ export default function Page() {
             createdAt: new Date(product.createdAt),
             updatedAt: new Date(product.updatedAt),
             tags: product.tags,
-            likes: product.likes // Get the number of likes by counting the emails in the 'likes' array
+            likesCount: product.likes.length // Count likes based on the length of the array
           }))
-          .sort((a, b) => b.likesCount - a.likesCount) // Sort by the length of 'likes' array in descending order
-          
-        setProducts(fetchedProducts)
-      } catch (error) {
-        console.error("Error fetching products:", error)
-      }
-    }
+          .sort((a, b) => b.likesCount - a.likesCount); // Sort by likes count
 
-    fetchProducts()
-  }, [])
+        setProducts(fetchedProducts);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        setError("Failed to load products."); // Set error message
+      } finally {
+        setLoading(false); // Set loading to false after fetching
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
       <NavBar />
-      <AllProductsPage products={products} />
+      {loading ? (
+        <div className="flex justify-center min-h-screen items-center h-full">
+        <Loader/>
+        </div>
+      ) : error ? (
+        <div className="flex justify-center items-center h-full">
+          <p>{error}</p>
+        </div>
+      ) : (
+        <AllProductsPage products={products} />
+      )}
       <Footer />
     </div>
-  )
+  );
 }
