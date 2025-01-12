@@ -8,52 +8,89 @@ import axios from 'axios';
 import Image from 'next/image';
 
 const categories = ['Alle', 'Kinderwagen', 'Unterwegs', 'Kindersitze', 'Spielzeug', 'Ernährung', 'Wohnen', 'Bekleidung'];
-const cantons = ['Alle', 'Bern', 'Zürich', 'Basel', 'Luzern', 'St. Gallen'];
+const cities = [
+  'Alle', 'Aargau', 'Appenzell Ausserrhoden', 'Appenzell Innerrhoden', 'Basel-Landschaft', 
+  'Basel-Stadt', 'Bern', 'Freiburg', 'Genf', 'Glarus', 'Graubünden', 'Jura', 'Luzern', 
+  'Neuenburg', 'Nidwalden', 'Obwalden', 'Schaffhausen', 'Schwyz', 'Solothurn', 'St. Gallen', 
+  'Tessin', 'Thurgau', 'Uri', 'Waadt', 'Wallis', 'Zug', 'Zürich'
+];
 
 export default function AllProductsPage({ products = [], user }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('Alle');
-  const [selectedCanton, setSelectedCanton] = useState('Alle');
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCities, setSelectedCities] = useState([]);
   const [priceMin, setPriceMin] = useState('');
   const [priceMax, setPriceMax] = useState('');
   const [filteredProducts, setFilteredProducts] = useState(products);
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+  const [showCityDropdown, setShowCityDropdown] = useState(false);
 
   useEffect(() => {
     const category = searchParams?.get('category');
     const search = searchParams?.get('search');
 
     if (category) {
-      setSelectedCategory(category);
+      setSelectedCategories([category]);
       setSearchTerm('');
     } else if (search) {
       setSearchTerm(search);
-      setSelectedCategory('Alle');
+      setSelectedCategories([]);
     }
   }, [searchParams]);
 
   useEffect(() => {
     const filtered = products.filter((product) => {
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = selectedCategory === 'Alle' || product.category === selectedCategory;
-      const matchesCanton = selectedCanton === 'Alle' || product.canton === selectedCanton;
+      const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(product.category);
+      const matchesCity = selectedCities.length === 0 || selectedCities.includes(product.canton) || selectedCities.includes(product.location);
       const matchesPrice = (!priceMin || product.price >= Number(priceMin)) && 
                            (!priceMax || product.price <= Number(priceMax));
-      return matchesSearch && matchesCategory && matchesCanton && matchesPrice;
+      return matchesSearch && matchesCategory && matchesCity && matchesPrice;
     });
     setFilteredProducts(filtered);
-  }, [searchTerm, selectedCategory, selectedCanton, priceMin, priceMax, products]);
+  }, [searchTerm, selectedCategories, selectedCities, priceMin, priceMax, products]);
 
   const clearFilters = () => {
-    setSelectedCategory('Alle');
-    setSelectedCanton('Alle');
+    setSelectedCategories([]);
+    setSelectedCities([]);
     setPriceMin('');
     setPriceMax('');
     setSearchTerm('');
   };
 
-  const hasActiveFilters = selectedCategory !== 'Alle' || selectedCanton !== 'Alle' || searchTerm !== '' || priceMin !== '' || priceMax !== '';
+  const hasActiveFilters = selectedCategories.length > 0 || selectedCities.length > 0 || searchTerm !== '' || priceMin !== '' || priceMax !== '';
+
+  const handleCategoryChange = (category) => {
+    if (category === 'Alle') {
+      setSelectedCategories(selectedCategories.length === 0 ? ['Alle'] : []);
+    } else {
+      setSelectedCategories(prev => {
+        const newCategories = prev.filter(c => c !== 'Alle');
+        if (newCategories.includes(category)) {
+          return newCategories.filter(c => c !== category);
+        } else {
+          return [...newCategories, category];
+        }
+      });
+    }
+  };
+
+  const handleCityChange = (city) => {
+    if (city === 'Alle') {
+      setSelectedCities(selectedCities.length === 0 ? ['Alle'] : []);
+    } else {
+      setSelectedCities(prev => {
+        const newCities = prev.filter(c => c !== 'Alle');
+        if (newCities.includes(city)) {
+          return newCities.filter(c => c !== city);
+        } else {
+          return [...newCities, city];
+        }
+      });
+    }
+  };
 
   const handleLike = async (productId, e) => {
     e.stopPropagation();
@@ -68,7 +105,6 @@ export default function AllProductsPage({ products = [], user }) {
           withCredentials: true
         }
       );
-      // Update the product's like status in the local state
       setFilteredProducts(prevProducts => 
         prevProducts.map(p => 
           p.id === productId ? { ...p, isLiked: !p.isLiked } : p
@@ -122,31 +158,53 @@ export default function AllProductsPage({ products = [], user }) {
           {/* Filters */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div className="relative">
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full appearance-none rounded-lg border border-gray-200 p-3 pr-10 bg-white focus:outline-none focus:border-[#91d2e3] transition-colors"
+              <button
+                onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
+                className="w-full rounded-lg border border-gray-200 p-3 pr-10 bg-white focus:outline-none focus:border-[#91d2e3] transition-colors text-left"
               >
-                <option value="" disabled>Kategorien</option>
-                {categories.map(category => (
-                  <option key={category} value={category}>{category}</option>
-                ))}
-              </select>
+                Kategorien ({selectedCategories.length === 0 ? 'Alle' : selectedCategories.length})
+              </button>
               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              {showCategoryDropdown && (
+                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg">
+                  {categories.map(category => (
+                    <label key={category} className="flex items-center p-3 hover:bg-gray-100">
+                      <input
+                        type="checkbox"
+                        checked={selectedCategories.includes(category) || (category === 'Alle' && selectedCategories.length === 0)}
+                        onChange={() => handleCategoryChange(category)}
+                        className="mr-2"
+                      />
+                      {category}
+                    </label>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="relative">
-              <select
-                value={selectedCanton}
-                onChange={(e) => setSelectedCanton(e.target.value)}
-                className="w-full appearance-none rounded-lg border border-gray-200 p-3 pr-10 bg-white focus:outline-none focus:border-[#B4E4E8] transition-colors"
+              <button
+                onClick={() => setShowCityDropdown(!showCityDropdown)}
+                className="w-full rounded-lg border border-gray-200 p-3 pr-10 bg-white focus:outline-none focus:border-[#B4E4E8] transition-colors text-left"
               >
-                <option value="" disabled>Kanton</option>
-                {cantons.map(canton => (
-                  <option key={canton} value={canton}>{canton}</option>
-                ))}
-              </select>
+                Kanton/Ort ({selectedCities.length === 0 ? 'Alle' : selectedCities.length})
+              </button>
               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              {showCityDropdown && (
+                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                  {cities.map(city => (
+                    <label key={city} className="flex items-center p-3 hover:bg-gray-100">
+                      <input
+                        type="checkbox"
+                        checked={selectedCities.includes(city) || (city === 'Alle' && selectedCities.length === 0)}
+                        onChange={() => handleCityChange(city)}
+                        className="mr-2"
+                      />
+                      {city}
+                    </label>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="flex items-center gap-2">
@@ -181,7 +239,7 @@ export default function AllProductsPage({ products = [], user }) {
                   className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
                   onClick={() => router.push(`/product-details/${product.id}`)}
                 >
-                  <div className="p-4  relative h-48">
+                  <div className="p-4 relative h-48">
                     <Image
                       src={product.image}
                       alt={product.name}
@@ -189,8 +247,6 @@ export default function AllProductsPage({ products = [], user }) {
                       height={500}
                       className="w-full rounded-xl h-full object-cover"
                     />
-                    
-                 
                   </div>
                   <div className="p-4">
                     <h3 className="text-xl font-medium mb-2">{product.name}</h3>
@@ -199,7 +255,7 @@ export default function AllProductsPage({ products = [], user }) {
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-1 px-3 py-1 bg-[#FFE5E5] text-[#FF8A8A] rounded-full text-sm">
                         <MapPin className="w-4 h-4" />
-                        <span>{product.canton}</span>
+                        <span>{product.canton} {product.location}</span>
                       </div>
                       <button className="px-4 py-1 bg-[#B4E4E8] text-white rounded-full text-sm hover:bg-[#a3d3d7] transition-colors">
                         Details anzeigen
@@ -215,3 +271,4 @@ export default function AllProductsPage({ products = [], user }) {
     </Suspense>
   );
 }
+
