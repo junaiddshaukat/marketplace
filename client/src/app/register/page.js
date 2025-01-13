@@ -6,6 +6,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { Eye, EyeOff } from 'lucide-react';
 import Link from "next/link";
+import Image from "next/image";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -237,25 +238,31 @@ export default function RegisterForm() {
                 <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span>3 Users</span>
+                <span>Unlimited Ads</span>
               </div>
               <div className="flex items-center text-gray-600">
                 <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Up to 5 collections/month</span>
+                <span>Access to secure Marketplace</span>
               </div>
               <div className="flex items-center text-gray-600">
                 <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span>5% sales fees for the platform</span>
+                <span>Grow your buissness with Mama Marketplace </span>
               </div>
-              <div className="flex items-center text-gray-600">
-                <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>5% resale royalty</span>
+             
+            </div>
+
+            {/* Payment Logos */}
+            <div className="mt-6">
+              <p className="text-sm text-gray-600 mb-2">Accepted payment methods:</p>
+              <div className="flex flex-wrap gap-2">
+                <Image src="https://brandlogos.net/wp-content/uploads/2021/11/mastercard-logo-512x512.png" alt="Mastercard" width={40} height={25} />
+                <Image src="https://brandlogos.net/wp-content/uploads/2016/11/visa-logo-preview-400x400.png" alt="Visa" width={40} height={25} />
+                <Image src="https://images.squarespace-cdn.com/content/v1/63ea328cd3dea22408d390c2/1681388261217-2DNBJE1IZ5D3UDBKN0ZG/card_square_twint.png?format=750w" alt="Twint" width={40} height={25} />
+                <Image src="https://brandlogos.net/wp-content/uploads/2022/10/postfinance-logo_brandlogos.net_pegaj-512x512.png" alt="PostFinance Pay" width={40} height={25} />
               </div>
             </div>
           </div>
@@ -535,7 +542,7 @@ export default function RegisterForm() {
                   disabled={isLoading}
                   className="px-6 py-2.5 bg-pink-600 text-white rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  {isLoading ? "Processing..." : "Register"}
+                  {isLoading ? "Processing..." : "Jetzt kostenpflichtig registrieren"}
                 </button>
               </div>
             </form>
@@ -550,5 +557,4 @@ export default function RegisterForm() {
     </div>
   );
 }
-
 
