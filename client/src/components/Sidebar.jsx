@@ -24,7 +24,7 @@ export default function DashboardLayout({ children }) {
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { name: 'My Ads', href: '/dashboard/my-ads', icon: FileText },
     { name: 'Add Ad', href: '/dashboard/add-ad', icon: PlusCircle },
-    { name: 'In Active Ads', href: '/dashboard/inactive', icon: Star },
+    // { name: 'In Active Ads', href: '/dashboard/inactive', icon: Star },
     { name: 'Contact Information', href: '/dashboard/contact', icon: Phone },
     { name: 'Edit Profile', href: '/dashboard/profile', icon: UserCircle },
     { name: 'Subscription', href: '/dashboard/subscription', icon: CreditCard },

@@ -10,7 +10,7 @@ import mongoose, {Types, Document, Schema } from "mongoose";
   description: string;
   price: number;
   category: string;
-  images: string[];
+  images: { public_id: string; url: string }[];
   postedBy: mongoose.Types.ObjectId;
   status: 'Active' | 'NeedToRefresh' | 'InActive';
   expiryDate: Date;
@@ -45,9 +45,15 @@ const productAdSchema = new mongoose.Schema<IProductAd>({
     type: String,
     required: true,
   },
+  
   images: {
-    type: [String],
-    validate: [arrayLimit, 'You can upload up to 5 images only.'],
+    type: [
+      {
+        public_id: { type: String, required: true },
+        url: { type: String, required: true },
+      },
+    ],
+    validate: [arrayLimit, "You can upload up to 5 images only."],
   },
   postedBy: {
     type: mongoose.Schema.Types.ObjectId,

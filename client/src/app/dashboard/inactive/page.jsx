@@ -99,7 +99,7 @@ export default function InactiveAds() {
                     className="w-full h-full object-cover"
                   /> */}
                   <Image
-                    src={item.images[0]}
+                    src={item.images[0].url}
                     alt={item.title}
                     layout="fill"
                     objectFit="cover"

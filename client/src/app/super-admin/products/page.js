@@ -124,7 +124,7 @@ const ProductsPage = () => {
         {filteredProducts.map(product => (
           <div key={product._id} className="bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md">
             <Image 
-              src={product.images[0] || 'https://res.cloudinary.com/junaidshaukat/image/upload/v1726802723/uvlyj6jquxlk263zjqzn.png'} 
+              src={product.images[0].url || 'https://res.cloudinary.com/junaidshaukat/image/upload/v1726802723/uvlyj6jquxlk263zjqzn.png'} 
               alt={product.title} 
               width={200} 
               height={200} 

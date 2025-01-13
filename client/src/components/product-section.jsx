@@ -108,7 +108,7 @@ export default function ProductSection({ title, products }) {
               </button>
               <div className='p-4'>
                 <Image
-                  src={product.images[0]}
+                  src={product.images[0].url}
                   alt={product.title}
                   width={300}
                   height={200}

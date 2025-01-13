@@ -15,7 +15,7 @@ import { isAuthenticated } from "../middleware/auth";
 
 const productAdRouter = express.Router(); // Named the router for better identification
 
- productAdRouter.post("/create-product", uploadImages, processImages, createProductAd);
+ productAdRouter.post("/create-product", processImages, createProductAd);
 // productAdRouter.post("/create-product", createProductAd);
 
 productAdRouter.get("/get-my-FavoriteAds",isAuthenticated, getFavoriteAds);

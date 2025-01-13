@@ -22,7 +22,7 @@ export default function Page() {
             id: product._id,
             name: product.title,
             price: product.price,
-            image: product.images.length > 0 ? product.images[0] : "/placeholder.svg?height=200&width=200",
+            image: product.images.length > 0 ? product.images[0].url : "/placeholder.svg?height=200&width=200",
             description: product.description,
             category: product.category,
             status: product.status,

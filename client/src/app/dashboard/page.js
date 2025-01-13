@@ -142,21 +142,7 @@ export default function Dashboard() {
         )}
       </div>
 
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Active Ads</h2>
-        {activeAds.length > 0 ? (
-          <ul className="space-y-2">
-            {activeAds.map((ad) => (
-              <li key={ad._id} className="bg-white rounded-lg p-4 shadow-sm">
-                <h3 className="font-medium">{ad.title}</h3>
-                <p className="text-sm text-gray-600">Status: {ad.status}</p>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>You don&apos;t have any active ads at the moment.</p>
-        )}
-      </div>
+    
 
       <div>
         <Link href="/dashboard/add-ad" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">

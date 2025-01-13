@@ -35,7 +35,7 @@ export default function ImageGallery({ images }) {
             }`}
           >
             <Image
-              src={image}
+              src={image.url}
               alt={`Thumbnail ${index + 1}`}
               fill
               className="object-cover"
@@ -48,7 +48,7 @@ export default function ImageGallery({ images }) {
       <div className="relative flex-1">
         <div className={`relative aspect-square overflow-hidden rounded-lg bg-gray-100 ${isZoomed ? 'cursor-zoom-out' : 'cursor-zoom-in'}`}>
           <Image
-            src={images[currentImage]}
+            src={images[currentImage].url}
             alt={`Product image ${currentImage + 1}`}
             fill
             className={`object-cover transition-transform duration-300 ${isZoomed ? 'scale-150' : 'scale-100'}`}

@@ -559,7 +559,7 @@ export const deleteUser = CatchAsyncErrore(async (req: Request, res: Response, n
       }
   
       // Check if the user's email matches the super admin email
-      const isSuperAdmin = user.email === "zain9175zain@gmail.com";
+      const isSuperAdmin = user.email === "hello@nicolasgrimm.ch";
   
       if (isSuperAdmin) {
         res.status(200).json({ success: true, message: 'User is a super admin' });

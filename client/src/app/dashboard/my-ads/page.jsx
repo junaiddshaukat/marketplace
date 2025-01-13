@@ -186,7 +186,7 @@ export default function MyAds() {
             className="overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-1"
           >
             <Image
-              src={ad.images[0] || "/placeholder.svg"}
+              src={ad.images[0].url || "/placeholder.svg"}
               alt={ad.title || "Placeholder"}
               width={400}
               height={192}

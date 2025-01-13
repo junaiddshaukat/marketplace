@@ -44,7 +44,7 @@ const uploadToCloudinary = async (fileBuffer:any, folder: string) => {
   const result=await cloudinary.uploader.upload(fileBuffer, {
     folder: "images",
   });
-   return result.url;
+  return { public_id: result.public_id, url: result.secure_url };
   
 };
 
@@ -126,20 +126,39 @@ export const updateProductAd = async (req: Request, res: Response, next: NextFun
 };
 
 // Delete a product ad by ID
+
+// Updated deleteProductAd function
 export const deleteProductAd = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;
 
-    const deletedAd = await productModel.findByIdAndDelete(id);
-    if (!deletedAd) {
+    // Find the product by ID to retrieve its images
+    const product = await productModel.findById(id);
+    if (!product) {
       return next(new ErroreHandler("Product not found", 400));
     }
-    res.status(200).json({ message: 'Product Ad deleted successfully', ad: deletedAd });
+
+    // Delete images from Cloudinary
+    if (product.images && product.images.length > 0) {
+      const deletionPromises = product.images.map((image) =>
+        cloudinary.uploader.destroy(image.public_id )
+      );
+      await Promise.all(deletionPromises);
+     
+    }
+
+    // Delete the product from the database
+    const deletedAd = await productModel.findByIdAndDelete(id);
+    if (!deletedAd) {
+      return next(new ErroreHandler("Failed to delete the product", 500));
+    }
+
+    res.status(200).json({ message: "Product Ad deleted successfully", ad: deletedAd });
   } catch (error: any) {
+    console.error(`Error deleting product: ${error.message}`);
     return next(new ErroreHandler(error.message, 500));
   }
 };
-
 
 
 
@@ -259,10 +278,10 @@ export const activateAd = async (req: Request, res: Response,next:NextFunction) 
       return next(new ErroreHandler("User not authenticated",400))
     }
 
-    if (user.paymentStatus != "active") {
+    if (user.paymentStatus === "") {
       return res.status(200).json({ 
         success: false, 
-        message: 'Please pay for Activate your Add', 
+        message: 'Please subscribe to a plan to view contact details. Visit the payment page to continue.', 
        
       });
     }
