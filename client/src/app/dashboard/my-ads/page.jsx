@@ -208,7 +208,7 @@ export default function MyAds() {
               </div>
               <div className="mt-4 flex items-center justify-between">
                 <div className="text-lg font-semibold text-[#FF9EAA]">
-                  ${ad.price}
+                  CHF {ad.price}
                 </div>
                 <div className="flex items-center gap-2">
                   {activeTab === "inactive" && (

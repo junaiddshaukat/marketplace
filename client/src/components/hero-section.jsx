@@ -1,19 +1,19 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import { useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function HeroSection() {
-  const router = useRouter()
-  const [search, setSearch] = useState('')
+  const router = useRouter();
+  const [search, setSearch] = useState("");
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (search.trim()) {
-      router.push(`/all-products?search=${encodeURIComponent(search.trim())}`)
+      router.push(`/all-products?search=${encodeURIComponent(search.trim())}`);
     }
-  }
+  };
 
   return (
     <div className="relative mx-auto mt-5 mb-8 overflow-hidden rounded-2xl bg-[#ffa7b3]">
@@ -35,13 +35,16 @@ export default function HeroSection() {
           {/* Text Content */}
           <div className="mb-8 md:mb-32 w-full px-4 text-center sm:text-right">
             <h1 className="mx-auto sm:ml-auto sm:mr-0 max-w-[600px] text-[28px] font-bold leading-tight text-white sm:text-3xl md:text-4xl lg:text-5xl">
-              We have everything you need for your little treasure.
+              Wir haben alles, was du für deinen kleinen Schatz brauchst.
             </h1>
           </div>
 
           {/* Search Form */}
           <div className="w-full md:mb-3 px-4">
-            <form onSubmit={handleSubmit} className="flex w-full flex-col gap-4 sm:flex-row sm:gap-3">
+            <form
+              onSubmit={handleSubmit}
+              className="flex w-full flex-col gap-4 sm:flex-row sm:gap-3"
+            >
               <input
                 type="text"
                 value={search}
@@ -49,7 +52,7 @@ export default function HeroSection() {
                 placeholder="Produkt suchen"
                 className="h-[52px] w-full rounded-[12px] border-0 bg-white px-6 text-[16px] outline-none transition-all placeholder:text-gray-400 focus:ring-2 focus:ring-[#91d2e3] sm:h-14"
               />
-              <button 
+              <button
                 type="submit"
                 className="h-[52px] w-full rounded-[12px] bg-[#91d2e3] px-6 text-[16px] font-normal text-white transition-all hover:bg-[#7AC9D3] sm:h-14 sm:w-auto"
               >
@@ -60,6 +63,5 @@ export default function HeroSection() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-

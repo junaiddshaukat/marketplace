@@ -102,21 +102,21 @@ export default function NavBar() {
               <>
                 <Link href="/dashboard">
                   <button className="text-[#ffa7b3] hover:text-[#ff9fb8]">
-                    Dashboard
+                  Dashboard
                   </button>
                 </Link>
                 <button 
                   onClick={handleLogout}
                   className="rounded-full bg-[#ffa7b3] px-6 py-2 text-white hover:bg-[#ff9fb8]"
                 >
-                  Log Out
+                  Ausloggen
                 </button>
               </>
             ) : (
               <>
                 <Link href="/login">
                   <button className="rounded-full border border-[#FF9FB8] px-6 py-2 text-[#FF9FB8] hover:bg-[#FF9FB8] hover:text-white">
-                    Login
+                  Einloggen
                   </button>
                 </Link>
                 <Link href="/register">
