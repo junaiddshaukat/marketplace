@@ -27,6 +27,7 @@ export default function RegisterForm() {
       _confirmEmail: "",
       _confirmPassword: "",
       contactInformation: {
+        sellername:"",
         email: {
           value: "",
           visibility: "public"
@@ -36,8 +37,6 @@ export default function RegisterForm() {
           visibility: "public"
         },
         address: "",
-        location: "",
-        website: "",
       },
     },
   });
@@ -151,10 +150,10 @@ export default function RegisterForm() {
       { name: "password", value: formData.user.password },
       { name: "_confirmEmail", value: formData.user._confirmEmail },
       { name: "_confirmPassword", value: formData.user._confirmPassword },
+      { name: "contactInformation.sellername", value: formData.user.contactInformation.sellername },
       { name: "contactInformation.email.value", value: formData.user.contactInformation.email.value },
       { name: "contactInformation.phone.value", value: formData.user.contactInformation.phone.value },
       { name: "contactInformation.address", value: formData.user.contactInformation.address },
-      { name: "contactInformation.location", value: formData.user.contactInformation.location },
     ];
 
     requiredFields.forEach(({ name, value }) => {
@@ -175,11 +174,10 @@ export default function RegisterForm() {
           email: formData.user.email,
           password: formData.user.password,
           contactInformation: {
+            sellername:formData.user.contactInformation.sellername,
             email: formData.user.contactInformation.email,
             phone: formData.user.contactInformation.phone,
             address: formData.user.contactInformation.address,
-            location: formData.user.contactInformation.location,
-            website: formData.user.contactInformation.website || "",
           },
         },
       };
@@ -423,6 +421,26 @@ export default function RegisterForm() {
                     <div className="space-y-4">
                       <div>
                         <label className="block mb-1 font-medium">
+                          Seller Name <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          name="contactInformation.sellername"
+                          required
+                          className={`w-full p-2.5 border rounded-lg focus:border-pink-500 ${
+                            fieldErrors["user.contactInformation.sellername"] ? "border-red-500" : "border-gray-300"
+                          }`}
+                          value={formData.user.contactInformation.sellername}
+                          onChange={handleChange}
+                        />
+                        {fieldErrors["user.contactInformation.address"] && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {fieldErrors["user.contactInformation.address"]}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <label className="block mb-1 font-medium">
                           Email <span className="text-red-500">*</span>
                         </label>
                         <div className="flex items-center space-x-2">
@@ -441,7 +459,7 @@ export default function RegisterForm() {
                             value={formData.user.contactInformation.email.visibility}
                             onChange={(e) => handleVisibilityChange(e, "email")}
                           >
-                           <option value="public">Public</option>
+                            <option value="public">Public</option>
                             <option value="private">Private</option>
                           </select>
                         </div>
@@ -500,36 +518,6 @@ export default function RegisterForm() {
                             {fieldErrors["user.contactInformation.address"]}
                           </p>
                         )}
-                      </div>
-                      <div>
-                        <label className="block mb-1 font-medium">
-                          Location <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          name="contactInformation.location"
-                          required
-                          className={`w-full p-2.5 border rounded-lg focus:border-pink-500 ${
-                            fieldErrors["user.contactInformation.location"] ? "border-red-500" : "border-gray-300"
-                          }`}
-                          value={formData.user.contactInformation.location}
-                          onChange={handleChange}
-                        />
-                        {fieldErrors["user.contactInformation.location"] && (
-                          <p className="text-red-500 text-sm mt-1">
-                            {fieldErrors["user.contactInformation.location"]}
-                          </p>
-                        )}
-                      </div>
-                      <div>
-                        <label className="block mb-1 font-medium">Website</label>
-                        <input
-                          type="url"
-                          name="contactInformation.website"
-                          className="w-full p-2.5 border border-gray-300 rounded-lg focus:border-pink-500"
-                          value={formData.user.contactInformation.website}
-                          onChange={handleChange}
-                        />
                       </div>
                     </div>
                   </div>

@@ -16,12 +16,14 @@ export interface IUser extends Document {
         url: string;
     };
     payment_obj_id?: string;
+    subscriptionId?: string;
     gatewayID?: string;
     gatewayLINK?: string;
     paymentDate?: Date;
     paymentExpiryDate?: Date;
     paymentStatus?: string;
     contactInformation?: {
+        sellername?:string;
         email?: {
             value: string;
             visibility: 'public' | 'private';
@@ -50,6 +52,11 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
             type: String,
             default:"",
         },
+        subscriptionId:{
+            type:String,
+            default:"",
+        }
+        ,
         name: {
             type: String,
             required: [true, "Please enter your name"],
@@ -88,6 +95,10 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
             type: Date,
         },
         contactInformation: {
+            sellername: {
+                type: String,
+                required: false,
+            },
             email: {
                 value: {
                     type: String,

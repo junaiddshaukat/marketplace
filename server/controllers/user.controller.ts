@@ -32,6 +32,7 @@ interface IRegisterionBody{
     password:string,
     avatar?:string,
     contactInformation: {
+      sellername:string;
       email: {
         value: string;
         visibility: 'private' | 'public';
@@ -51,7 +52,8 @@ export const registrationUser = CatchAsyncErrore(async (req: Request, res: Respo
    
 
       const { name, email, password ,contactInformation} = req.body.user;
-      console.log(req.body.user);
+      console.log(req.body)
+
       
  
      
@@ -103,6 +105,7 @@ interface Iactivationrequest{
 export const activateUser=CatchAsyncErrore(async(req:Request,res:Response,next:NextFunction)=>{
     try{
         interface IRegisterionBody{
+          
     
             name:string,
             email:string,
@@ -466,22 +469,20 @@ export const getUserById = CatchAsyncErrore(
 
 export const updateUserContactInformation = async (req: Request, res: Response, next: NextFunction) => {
     try {
+
       const userId = req.user?._id?.toString();
       if (!userId) {
         return next(new ErroreHandler('User ID is missing', 400));
       }
   
-      const { contactInformation, name } = req.body;
+      const { contactInformation } = req.body;
   
       const user = await userModel.findById(userId);
       if (!user) {
         return next(new ErroreHandler('User not found', 404));
       }
   
-      // Update name if provided
-      if (name) {
-        user.name = name;
-      }
+    
 
       // Update contact information
       user.contactInformation = {
@@ -529,11 +530,11 @@ export const deleteUser = CatchAsyncErrore(async (req: Request, res: Response, n
       if (!user) {
         return next(new ErroreHandler('User not found', 404));
       }
-  
-      // Delete user's avatar from cloudinary if exists
       if (user.avatar && user.avatar.public_id) {
-        // Add cloudinary deletion logic here if needed
-      }
+      
+        await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+    }
+      
   
       await userModel.findByIdAndDelete(id);
   
@@ -663,7 +664,7 @@ export const deleteUser = CatchAsyncErrore(async (req: Request, res: Response, n
 
       res.status(201).json({
         success: true,
-        message: "Your OTP varify  successfully",
+        message: "Your OTP verify  successfully",
       });
     } catch (err: any) {
       return next(new ErroreHandler(err.message, 400));

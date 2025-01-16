@@ -89,10 +89,10 @@ export default function NavBar() {
           <Link href="/" className="text-[#FF9FB8] hover:text-[#ff8da8]">
             Startseite
           </Link>
-          <CategoryDropdown />
           <Link href="/all-products" className="text-[#FF9FB8] hover:text-[#ff8da8]">
             Alle Produkte
           </Link>
+          <CategoryDropdown />
        
         </div>
 

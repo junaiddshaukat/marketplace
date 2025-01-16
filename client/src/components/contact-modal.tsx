@@ -47,7 +47,7 @@ export default function ContactModal({ isOpen, onClose, isLoggedIn, owner }) {
 
         {/* Header */}
         <div className="p-6 border-b border-gray-100">
-          <h2 className="text-xl font-semibold text-gray-900">Contact information</h2>
+          <h2 className="text-xl font-semibold text-gray-900">Kontaktinformationen</h2>
         </div>
 
         {/* Content */}
@@ -65,12 +65,12 @@ export default function ContactModal({ isOpen, onClose, isLoggedIn, owner }) {
             ) : (
               <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
                 <span className="text-gray-500 font-medium">
-                  {owner?.name?.charAt(0).toUpperCase() || 'S'}
+                  {owner?.contactInformation.sellername?.charAt(0).toUpperCase() || 'S'}
                 </span>
               </div>
             )}
             <div>
-              <h3 className="font-medium text-gray-900">{owner?.name || "Admin"}</h3>
+              <h3 className="font-medium text-gray-900">{owner?.contactInformation.sellername || "Admin"}</h3>
             </div>
           </div>
 
@@ -88,7 +88,7 @@ export default function ContactModal({ isOpen, onClose, isLoggedIn, owner }) {
    
   </>
 ) : (
-  <span className="text-sm text-gray-500">User email  is private</span>
+  <span className="text-sm text-gray-500"></span>
 )}
 
 
@@ -101,7 +101,7 @@ export default function ContactModal({ isOpen, onClose, isLoggedIn, owner }) {
     </div>
   </>
 ) : (
-  <span className="text-sm text-gray-500">User  phone is private</span>
+  <span className="text-sm text-gray-500"></span>
 )}
 
                 </div>

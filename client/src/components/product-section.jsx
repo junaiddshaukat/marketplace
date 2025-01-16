@@ -108,7 +108,7 @@ export default function ProductSection({ title, products }) {
               </button>
               <div className='p-4'>
                 <Image
-                  src={product.images[0].url}
+                  src={product.images[0].url || "/placeholder.svg"}
                   alt={product.title}
                   width={300}
                   height={200}
@@ -117,9 +117,9 @@ export default function ProductSection({ title, products }) {
               </div>
             </div>
             <div className="p-4 pt-0 flex flex-col flex-grow">
-              <h3 className=" text-lg font-medium text-[#4A5567]">{product.title}</h3>
+              <h3 className="text-lg font-medium text-[#4A5567]">{product.title}</h3>
               <p className="mb-1 text-lg font-bold text-[#FF6B8B]">CHF {product.price.toFixed(2)}</p>
-              <p className="mb-4 text-sm leading-relaxed text-[#9CA5B4] flex-grow">{product.description}</p>
+              <p className="mb-4 text-sm leading-relaxed text-[#9CA5B4] flex-grow line-clamp-2">{product.description}</p>
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                 <div className="flex items-center rounded-full bg-[#FFE6F0] px-3 py-1.5">
                   <MapPin className="w-3 h-4 mr-1 text-[#FF6B8B]" />

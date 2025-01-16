@@ -9,8 +9,8 @@ import toast from 'react-hot-toast';
 
 export default function EditProfile() {
   const [firstName, setFirstName] = useState('')
-  const [email, setEmail] = useState('')
-  const [confirmEmail, setConfirmEmail] = useState('')
+  // const [email, setEmail] = useState('')
+  // const [confirmEmail, setConfirmEmail] = useState('')
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -21,8 +21,8 @@ export default function EditProfile() {
   // State for error messages
   const [errors, setErrors] = useState({
     firstName: '',
-    email: '',
-    confirmEmail: '',
+    // email: '',
+    // confirmEmail: '',
     currentPassword: '',
     newPassword: '',
     confirmPassword: ''
@@ -42,7 +42,7 @@ export default function EditProfile() {
       });
       const userData = response.data.session;
       setFirstName(userData.name);
-      setEmail(userData.email);
+      // setEmail(userData.email);
       setAvatar(userData.avatar?.url || '');
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -86,7 +86,6 @@ export default function EditProfile() {
           setUploadProgress(0);
           setIsUploading(false);
           console.error('Error updating profile picture:', error);
-          // alert(error.response?.data?.message || 'Failed to update profile picture');
           toast.error(error.response?.data?.message || 'Failed to update profile picture');
         }
       };
@@ -106,26 +105,26 @@ export default function EditProfile() {
       updatedErrors.firstName = ''
     }
 
-    if (!email) {
-      updatedErrors.email = 'Email is required!'
-      valid = false
-    } else {
-      updatedErrors.email = ''
-    }
+    // if (!email) {
+    //   updatedErrors.email = 'Email is required!'
+    //   valid = false
+    // } else {
+    //   updatedErrors.email = ''
+    // }
 
-    if (email !== confirmEmail) {
-      updatedErrors.confirmEmail = 'Email confirmation does not match!'
-      valid = false
-    } else {
-      updatedErrors.confirmEmail = ''
-    }
+    // if (email !== confirmEmail) {
+    //   updatedErrors.confirmEmail = 'Email confirmation does not match!'
+    //   valid = false
+    // } else {
+    //   updatedErrors.confirmEmail = ''
+    // }
 
     setErrors(updatedErrors)
 
     if (valid) {
       try {
         const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/user/update-user-info`, 
-          { name: firstName, email },
+          { name: firstName },
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -134,12 +133,10 @@ export default function EditProfile() {
           }
         );
         setFirstName(response.data.user.name);
-        setEmail(response.data.user.email);
-        // alert('Personal Information Updated Successfully');
+        // setEmail(response.data.user.email);
         toast.success('Personal Information Updated Successfully');
       } catch (error) {
         console.error('Error updating personal information:', error);
-        // alert(error.response?.data?.message || 'Failed to update personal information');
         toast.error(error.response?.data?.message || 'Failed to update personal information');
       }
     }
@@ -187,12 +184,10 @@ export default function EditProfile() {
         setCurrentPassword('');
         setNewPassword('');
         setConfirmPassword('');
-        // alert('Password Updated Successfully');
         toast.success('Password Updated Successfully');
       } catch (error) {
         console.error('Error updating password:', error);
-        // alert(error.response?.data?.message || 'Failed to update password');
-         toast.error(error.response?.data?.message || 'Failed to update password');
+        toast.error(error.response?.data?.message || 'Failed to update password');
       }
     }
   }
@@ -203,49 +198,34 @@ export default function EditProfile() {
 
       <form className="space-y-6">
         {/* Profile Picture */}
-        <div className="rounded-xl bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-lg font-semibold">Profile Picture</h2>
+        <div className="rounded-2xl bg-white p-6 shadow-sm">
+          <h2 className="mb-4 text-lg font-semibold">Profilbild</h2>
           <div className="flex items-center gap-6">
-            <div className="relative">
-              <div className="h-24 w-24 rounded-full overflow-hidden relative">
+            <div className="relative group">
+              <div className="h-32 w-32 rounded-full overflow-hidden relative">
                 {isUploading ? (
                   <div className="absolute inset-0 bg-[#9DD5E3] flex items-center justify-center">
                     <Loader2 className="h-8 w-8 text-white animate-spin" />
                   </div>
                 ) : avatar ? (
                   <Image
-                  src={avatar || '/placeholder-avatar.svg'}
-                  alt="Profile"
-                  layout="fill"
-                  objectFit="cover"
-                  className="w-full h-full"
-                />
-                
+                    src={avatar || '/placeholder-avatar.svg'}
+                    alt="Profile"
+                    layout="fill"
+                    objectFit="cover"
+                    className="w-full h-full transition-opacity duration-300 group-hover:opacity-75"
+                  />
                 ) : (
-                  <div className="flex h-full items-center justify-center bg-[#9DD5E3] text-3xl font-semibold text-white">
+                  <div className="flex h-full items-center justify-center bg-[#9DD5E3] text-4xl font-semibold text-white">
                     {firstName.charAt(0).toUpperCase()}
                   </div>
                 )}
               </div>
-              {uploadProgress > 0 && uploadProgress < 100 && (
-                <div className="mt-2 w-full">
-                  <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-[#9DD5E3] rounded-full transition-all duration-300 ease-in-out"
-                      style={{ width: `${uploadProgress}%` }}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between mt-1">
-                    <p className="text-sm text-gray-500">Uploading...</p>
-                    <p className="text-sm font-medium text-[#9DD5E3]">{uploadProgress}%</p>
-                  </div>
-                </div>
-              )}
               <label
                 htmlFor="avatar-upload"
-                className="absolute bottom-0 right-0 rounded-full bg-white p-2 shadow-md hover:bg-gray-50 cursor-pointer"
+                className="absolute bottom-0 right-0 rounded-full bg-white p-3 shadow-md hover:bg-gray-50 cursor-pointer transition-all duration-300 transform hover:scale-110"
               >
-                <Camera className="h-4 w-4 text-gray-500" />
+                <Camera className="h-5 w-5 text-gray-500" />
                 <input
                   id="avatar-upload"
                   type="file"
@@ -256,56 +236,42 @@ export default function EditProfile() {
               </label>
             </div>
             <div>
-              <h3 className="font-medium">Profile Picture</h3>
-              <p className="text-sm text-gray-500">
-                Upload a new profile picture or remove the current one
+              <h3 className="font-medium text-lg">Profilbid</h3>
+              <p className="text-sm text-gray-500 mt-1">
+              Lade ein neues Profilbild hoch oder erstelle ein neues.
               </p>
             </div>
           </div>
+          {uploadProgress > 0 && uploadProgress < 100 && (
+            <div className="mt-4 w-full max-w-xs">
+              <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-[#9DD5E3] rounded-full transition-all duration-300 ease-in-out"
+                  style={{ width: `${uploadProgress}%` }}
+                />
+              </div>
+              <div className="flex items-center justify-between mt-1">
+                <p className="text-sm text-gray-500">Uploading...</p>
+                <p className="text-sm font-medium text-[#9DD5E3]">{uploadProgress}%</p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Personal Information */}
-        <div className="rounded-xl bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-lg font-semibold">Personal Information</h2>
-          <div className="grid gap-6 md:grid-cols-2">
-            <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">
-                First Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                className="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-[#9DD5E3] focus:outline-none"
-              />
-              {errors.firstName && <p className="text-red-500 text-sm">{errors.firstName}</p>}
-            </div>
-
-            <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">
-                Email <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-[#9DD5E3] focus:outline-none"
-              />
-              {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-            </div>
-
-            <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">
-                Confirm Email <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="email"
-                value={confirmEmail}
-                onChange={(e) => setConfirmEmail(e.target.value)}
-                className="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-[#9DD5E3] focus:outline-none"
-              />
-              {errors.confirmEmail && <p className="text-red-500 text-sm">{errors.confirmEmail}</p>}
-            </div>
+        <div className="rounded-2xl bg-white p-6 shadow-sm">
+          <h2 className="mb-4 text-lg font-semibold">Informationen</h2>
+          <div className="max-w-md">
+            <label className="mb-2 block text-sm font-medium text-gray-700">
+              User Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              className="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-[#9DD5E3] focus:outline-none"
+            />
+            {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
           </div>
         </div>
 
@@ -314,15 +280,15 @@ export default function EditProfile() {
           <button
             type="button"
             onClick={handlePersonalInformationUpdate}
-            className="rounded-lg bg-[#9DD5E3] px-6 py-2 font-medium text-white hover:bg-[#8bc5d3]"
+            className="rounded-lg bg-[#9DD5E3] px-6 py-2 font-medium text-white hover:bg-[#7AB5C3] transition-all duration-300 transform hover:scale-105"
           >
-            Save Personal Information
+            Save Changes
           </button>
         </div>
 
         {/* Password */}
-        <div className="rounded-xl bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-lg font-semibold">Change Password</h2>
+        <div className="rounded-2xl bg-white p-6 shadow-sm">
+          <h2 className="mb-4 text-lg font-semibold">Passwort ändern</h2>
           <div className="grid gap-6 md:grid-cols-2">
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-700">
@@ -332,35 +298,35 @@ export default function EditProfile() {
                 type="password"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
-                className="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-[#9DD5E3] focus:outline-none"
+                className="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-[#9DD5E3] focus:outline-none transition-all duration-300"
               />
-              {errors.currentPassword && <p className="text-red-500 text-sm">{errors.currentPassword}</p>}
+              {errors.currentPassword && <p className="text-red-500 text-sm mt-1">{errors.currentPassword}</p>}
             </div>
 
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-700">
-                New Password <span className="text-red-500">*</span>
+              Neues Passwort <span className="text-red-500">*</span>
               </label>
               <input
                 type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-[#9DD5E3] focus:outline-none"
+                className="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-[#9DD5E3] focus:outline-none transition-all duration-300"
               />
-              {errors.newPassword && <p className="text-red-500 text-sm">{errors.newPassword}</p>}
+              {errors.newPassword && <p className="text-red-500 text-sm mt-1">{errors.newPassword}</p>}
             </div>
 
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-700">
-                Confirm Password <span className="text-red-500">*</span>
+              Aktuelles Passwort wiederholen <span className="text-red-500">*</span>
               </label>
               <input
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-[#9DD5E3] focus:outline-none"
+                className="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-[#9DD5E3] focus:outline-none transition-all duration-300"
               />
-              {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword}</p>}
+              {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
             </div>
           </div>
         </div>
@@ -370,9 +336,9 @@ export default function EditProfile() {
           <button
             type="button"
             onClick={handlePasswordUpdate}
-            className="rounded-lg bg-[#9DD5E3] px-6 py-2 font-medium text-white hover:bg-[#8bc5d3]"
+            className="rounded-lg bg-[#9DD5E3] px-6 py-2 font-medium text-white hover:bg-[#7AB5C3] transition-all duration-300 transform hover:scale-105"
           >
-            Save Password
+            Passwort ändern
           </button>
         </div>
       </form>

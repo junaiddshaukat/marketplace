@@ -9,17 +9,20 @@ export default function Footer() {
             <ul className="flex space-x-4 text-sm text-gray-600">
               <li>
                 <Link href="/" className="hover:text-gray-900">
-                  Home
+                Startseite
+
                 </Link>
               </li>
               <li>
                 <Link href="/all-products" className="hover:text-gray-900">
-                 Products
+                Alle Produkte
+
                 </Link>
               </li>
               <li>
                 <Link href="/subscription" className="hover:text-gray-900">
-                  Subscription
+                Abonnement
+
                 </Link>
               </li>
             </ul>

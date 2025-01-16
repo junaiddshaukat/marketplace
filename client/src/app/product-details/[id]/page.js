@@ -125,7 +125,7 @@ export default function ProductPage() {
             <div className="flex items-center gap-4 text-sm text-gray-500">
               <span className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
-                Published on {new Date(product.createdAt).toLocaleDateString()}
+                Veröffentlicht am {new Date(product.createdAt).toLocaleDateString()}
               </span>
             </div>
 
@@ -171,7 +171,7 @@ export default function ProductPage() {
                 </div>
               )}
               <div>
-                <h3 className="font-medium text-gray-900">{owner?.name || "Admin"}</h3>
+                <h3 className="font-medium text-gray-900">{owner?.contactInformation.sellername || "Admin"}</h3>
               </div>
             </div>
 
@@ -180,7 +180,7 @@ export default function ProductPage() {
               onClick={handleContactClick}
               className="w-full bg-[#FF4400] hover:bg-[#E63E00] text-white py-3 rounded-lg font-medium transition-colors"
             >
-              Show contact information
+              Kontaktinformationen anzeigen
             </button>
           </div>
         </div>

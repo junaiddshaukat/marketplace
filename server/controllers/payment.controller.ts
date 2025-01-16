@@ -24,6 +24,17 @@ export const getGateaway = CatchAsyncErrore(
     }
   }
 )
+export const DeleteGateaway = CatchAsyncErrore(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const gatewayId = parseInt(req.params.id, 10);
+      const response = await payrexx.DeleteSubscription(gatewayId);
+      res.status(200).json(response.data);
+    } catch (error:any) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+)
 export const getSubscription = CatchAsyncErrore(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -72,8 +83,6 @@ export const createGateaway = CatchAsyncErrore(
 
       const gatewayID = response.data.data[0]?.id as string;
       const gatewayLINK = response.data.data[0]?.link as string;
-
-  
     
      await userModel.findByIdAndUpdate(userId, {
       gatewayID,
@@ -196,7 +205,7 @@ export const paymentchecker = async (req: Request, res: Response, next: NextFunc
     if (!subscriptions) {
       return res.status(400).json({ message: 'Transaction data is missing' });
     }
-
+    const subscriptionID = subscriptions.id;
     const transactionId = subscriptions.contact.id as string;
     const transactionStatus = subscriptions.status?.toLowerCase();
     // console.log('Transaction Status:', transactionStatus);
@@ -207,6 +216,7 @@ export const paymentchecker = async (req: Request, res: Response, next: NextFunc
         paymentStatus: 'active',
         paymentDate: new Date(),
         paymentExpiryDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+        subscriptionId: subscriptionID,
       });
       
       // console.log('Update Result:', updateResult);
@@ -257,4 +267,3 @@ export const cancelPaymentAndDeleteUser = async (req: Request, res: Response): P
     });
   }
 };
-

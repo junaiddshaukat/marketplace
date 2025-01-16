@@ -22,12 +22,12 @@ export default function DashboardLayout({ children }) {
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'My Ads', href: '/dashboard/my-ads', icon: FileText },
-    { name: 'Add Ad', href: '/dashboard/add-ad', icon: PlusCircle },
-    // { name: 'In Active Ads', href: '/dashboard/inactive', icon: Star },
-    { name: 'Contact Information', href: '/dashboard/contact', icon: Phone },
-    { name: 'Edit Profile', href: '/dashboard/profile', icon: UserCircle },
-    { name: 'Subscription', href: '/dashboard/subscription', icon: CreditCard },
+    { name: 'Meine Produkte', href: '/dashboard/my-ads', icon: FileText },
+    { name: 'Produkt hinzufügen', href: '/dashboard/add-ad', icon: PlusCircle },
+    { name: 'Meine Favoriten', href: '/dashboard/favourite', icon: Star },
+    { name: 'Kontaktinformationen', href: '/dashboard/contact', icon: Phone },
+    { name: 'Account-Einstellungen', href: '/dashboard/profile', icon: UserCircle },
+    { name: 'Abonnement', href: '/dashboard/subscription', icon: CreditCard },
   ]
 
   const fetchUserData = async () => {
@@ -186,7 +186,7 @@ export default function DashboardLayout({ children }) {
                     className="group flex w-full items-center rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200"
                   >
                     <LogOut className="mr-3 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-red-500" aria-hidden="true" />
-                    Log out
+                    Ausloggen
                   </button>
                 </div>
               </nav>

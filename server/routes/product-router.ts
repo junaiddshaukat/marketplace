@@ -16,7 +16,7 @@ import { isAuthenticated } from "../middleware/auth";
 const productAdRouter = express.Router(); // Named the router for better identification
 
  productAdRouter.post("/create-product", processImages, createProductAd);
-// productAdRouter.post("/create-product", createProductAd);
+ productAdRouter.put("/update-product/:id" ,processImages,updateProductAd);
 
 productAdRouter.get("/get-my-FavoriteAds",isAuthenticated, getFavoriteAds);
 productAdRouter.get("/getall-products", getAllProductAds);
@@ -29,7 +29,7 @@ productAdRouter.post('/activateAd/:adId', isAuthenticated, activateAd);
 productAdRouter.get("/getproduct/:id", getProductAdById);
 
 
-productAdRouter.put("update-product/:id", updateProductAd);
+
 productAdRouter.delete('/delete-product/:id', deleteProductAd);
 
 productAdRouter.put('/like/:productId', toggleLike);

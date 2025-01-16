@@ -50,7 +50,7 @@ const uploadToCloudinary = async (fileBuffer:any, folder: string) => {
 
 // Middleware to process uploaded images and attach URLs to req.body
 export const processImages = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  // console.log(req.body.images)
+
 
   try {
     if (req.body.images && Array.isArray(req.body.images)) {
@@ -80,35 +80,24 @@ export const createProductAd = async (req: Request, res: Response, next: NextFun
 
 
 
-
-
-export const getAllProductAds = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  try {
-    const ads = await productModel.find();
-    res.status(200).json({ message: 'Success', ads });
-  } catch (error: any) {
-    return next(new ErroreHandler(error.message, 400));
-  }
-};
-
-// Get a single product ad by ID
-export const getProductAdById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  try {
-    const { id } = req.params;
-    const ad = await productModel.findById(id);
-    if (!ad) {
-      return next(new ErroreHandler("Product not found", 400));
-    }
-    res.status(200).json({ message: 'Success', ad });
-  } catch (error: any) {
-    return next(new ErroreHandler(error.message, 400));
-  }
-};
-
 // Update a product ad by ID
 export const updateProductAd = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
+
     const { id } = req.params;
+    const product = await productModel.findById(id);
+    if (!product) {
+      return next(new ErroreHandler("Product not found", 400));
+    }
+
+    // Delete images from Cloudinary
+    if (product.images && product.images.length > 0) {
+      const deletionPromises = product.images.map((image) =>
+        cloudinary.uploader.destroy(image.public_id )
+      );
+      await Promise.all(deletionPromises);
+     
+    }
     const updatedAd = await productModel.findByIdAndUpdate(id, req.body, {
       new: true, // Return the updated document
       runValidators: true, // Run schema validators on the updated data
@@ -124,6 +113,37 @@ export const updateProductAd = async (req: Request, res: Response, next: NextFun
     return next(new ErroreHandler(error.message, 500));
   }
 };
+
+
+
+
+
+
+
+export const getAllProductAds = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const ads = await productModel.find();
+    res.status(200).json({ message: 'Success', ads });
+  } catch (error: any) {
+    return next(new ErroreHandler(error.message, 400));
+  }
+};
+
+// Get a single product ad by ID
+export const getProductAdById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    const ad = await productModel.findById(id);
+    if (!ad) {
+      return next(new ErroreHandler("Product not found", 400));
+    }
+    res.status(200).json({ message: 'Success', ad });
+  } catch (error: any) {
+    return next(new ErroreHandler(error.message, 400));
+  }
+};
+
 
 // Delete a product ad by ID
 

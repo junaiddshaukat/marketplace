@@ -12,7 +12,7 @@ export default function Dashboard() {
   const [stats, setStats] = useState([
     { title: 'Total Ads', value: 0, icon: '👥', color: 'bg-[#FF9EAA]', path: '/dashboard/my-ads' },
     { title: 'Active Ads', value: 0, icon: '📈', color: 'bg-[#9DD5E3]', path: '/dashboard/my-ads' },
-    { title: 'Inactive Ads', value: 0, icon: '⭐', color: 'bg-[#FF9EAA]', path: '/dashboard/inactive' },
+    { title: 'Inactive Ads', value: 0, icon: '⭐', color: 'bg-[#FF9EAA]', path: '/dashboard/my-ads' },
   ]);
   const [ads, setAds] = useState([]);
   const [activeAds, setActiveAds] = useState([]);

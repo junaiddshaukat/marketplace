@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Menu, X } from 'lucide-react'
+import Image from 'next/image'
 
 export default function Navbar({ userName }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -10,19 +11,27 @@ export default function Navbar({ userName }) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 justify-between">
           <div className="flex items-center">
-            <Link href="/" className="flex-shrink-0">
-              <span className="text-xl font-bold text-[#FF8BA7]">Mama Marketplace</span>
-            </Link>
+          <Link href="/" className="flex items-center gap-2">
+          <Image 
+            src="https://res.cloudinary.com/junaidshaukat/image/upload/v1735666004/Untitled_design_2_uilhby.png" 
+            alt="Logo" 
+            width={200} 
+            height={200} 
+            className="rounded-full"
+          />
+        </Link>
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-8">
             <Link href="/" className="text-gray-600 hover:text-gray-900">
-              Home
+            Startseite
+
             </Link>
             <Link href="/all-products" className="text-gray-600 hover:text-gray-900">
-              Products
+            Alle Produkte
+
             </Link>
             <Link href="/subscription" className="text-gray-600 hover:text-gray-900">
-              Subscription
+            Abonnement
             </Link>
             <span className="text-sm font-medium text-gray-700">Welcome, {userName}</span>
           </div>
@@ -46,13 +55,16 @@ export default function Navbar({ userName }) {
       <div className={`sm:hidden ${isOpen ? 'block' : 'hidden'}`}>
         <div className="space-y-1 pb-3 pt-2">
           <Link href="/" className="block px-3 py-2 text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900">
-            Home
+          Startseite
+
           </Link>
           <Link href="/all-products" className="block px-3 py-2 text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900">
-            Products
+          Alle Produkte
+
           </Link>
           <Link href="/subscription" className="block px-3 py-2 text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900">
-            Subscription
+          Abonnement
+
           </Link>
           <div className="px-3 py-2 text-base font-medium text-gray-600">
             Welcome, {userName}

@@ -42,12 +42,34 @@ export class PayrexxService {
     const url = `${this.buildBaseUrl(`Gateway/${id}/`)}&ApiSignature=${this.buildSignature()}`;
     return axios.get(url);
   }
-  // create a transaction
-  
+  // Delete Gateway
+  public async DeleteSubscription(id: number): Promise<AxiosResponse> {
+    const bodyParams = {
+      userId: id,
+      instance: "nicolasgrimm", // Replace with actual instance fetching logic
+  };
+  const queryStr = qs.stringify(bodyParams);
+
+  // Construct the final URL
+  const url = `${this.buildBaseUrl(`Subscription/${id}/`)}&${queryStr}`;
+
+  try {
+      // Send DELETE request with correct content-type and API secret in headers
+      return await axios.delete(url, {
+          headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'X-API-KEY': process.env.PAYREXX_API_KEY || 'Vk63GZvmlGAAF9KeNgLzfurXGvxn0s', // Replace with environment variable or securely stored value
+          },
+      });
+  } catch (error) {
+      console.error('Error occurred while fetching subscription:', error);
+      throw error;
+  }   
+  }
   // Retrieve a transaction
   public async viewTransaction(id: number): Promise<AxiosResponse> {
     const url = `${this.buildBaseUrl(`Transaction/${id}/`)}&ApiSignature=${this.buildSignature()}`;
-    return axios.get(url);
+    return axios.delete(url);
   }
   public async captureTransaction(id: number): Promise<AxiosResponse> {
     const url = `${this.buildBaseUrl(`Transaction/${id}/capture`)}&ApiSignature=${this.buildSignature()}`;

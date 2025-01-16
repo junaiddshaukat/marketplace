@@ -2,13 +2,16 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Upload, X } from 'lucide-react';
-import { useRouter } from "next/navigation";
+
 import axios from "axios";
 import toast from "react-hot-toast";
 import Image from "next/image";
+import { useParams, useRouter } from 'next/navigation';
 
-export default function AddAd() {
-  const router = useRouter();
+export default function EditAd() {
+    const { id } = useParams();
+    const router = useRouter();
+  
 
   // Separate state for each input
   const [title, setTitle] = useState("");
@@ -18,47 +21,68 @@ export default function AddAd() {
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [images, setImages] = useState([]); // Images as base64 encoded strings
+
   const [tags, setTags] = useState([]); // Tags
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   // Fetch the current user ID and check if the user is logged in
   const fetchUserDetails = useCallback(async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/me`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        withCredentials: true,
-      });
-      console.log();
-      setIsLoggedIn(response.data.success);
-      if (response.data.session.paymentStatus != "active") {
+      const [userResponse, postResponse] = await Promise.all([
+        axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/me`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          withCredentials: true,
+        }),
+        axios.get(`${process.env.NEXT_PUBLIC_API_URL}/product/getproduct/${id}`)
+      ]);
+
+      if (userResponse.data.session.paymentStatus !== "active") {
         setisUserpaid(false);
       }
+      console.log("user idf",userResponse.data.session._id)
 
-      if (response.data.success) {
-        setUserId(response.data.session._id); // Assuming `user._id` contains the user ID
-      }
+      setUserId(userResponse.data.session._id);
+
+      // Set the form data with the fetched post data
+      const post = postResponse.data.ad;
+      setTitle(post.title);
+      setCategory(post.category);
+      setLocation(post.location);
+      setPrice(post.price.toString());
+      setDescription(post.description);
+      setTags(post.tags);
+      // setOriginalImages(post.images);
+
+      // Convert existing images to base64
+      const base64Images = await Promise.all(post.images.map(async (img) => {
+        const response = await fetch(img.url);
+        const blob = await response.blob();
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+      }));
+      setImages(base64Images);
+
     } catch (error) {
-      setIsLoggedIn(false);
+      toast.error("Error loading post data. Please try again.");
+      router.push('/dashboard/my-ads');
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [id, router]);
 
   useEffect(() => {
     fetchUserDetails(); // Call fetchUserDetails when the component mounts
   }, [fetchUserDetails]);
 
-  // Function to calculate the expiry date (365 days from now)
-  const calculateExpiryDate = () => {
-    const currentDate = new Date();
-    currentDate.setMonth(currentDate.getMonth() + 1); // Add 1 month
-    return currentDate.toISOString();
-  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -74,29 +98,25 @@ export default function AddAd() {
           price,
           description,
           images, // Base64 images array
-          postedBy: userId, // The ID of the current user
-          expiryDate: calculateExpiryDate(), // Expiry date set to 365 days after today
-          tags, // Tags
+         
+          postedBy: userId,
+          tags,
         };
 
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/product/create-product`,
+        const response = await axios.put(
+          `${process.env.NEXT_PUBLIC_API_URL}/product/update-product/${id}`,
           dataToSubmit,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
+          
         );
 
-        console.log("Ad created successfully:", response.data);
+        console.log("Ad updated successfully:", response.data);
         router.push("/dashboard/my-ads");
       } else {
-        toast.error("Please pay to create a post");
+        toast.error("Please pay to update the post");
       }
     } catch (error) {
       console.error(
-        "Error uploading ad:",
+        "Error updating ad:",
         error.response ? error.response.data : error.message
       );
     } finally {
@@ -134,16 +154,17 @@ export default function AddAd() {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>; // Show a loading message while user details are being fetched
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#9DD5E3]"></div>
+      </div>
+    );
   }
 
-  if (!isLoggedIn) {
-    return <div>please log in to create an ad.</div>; // Show a message if the user is not logged in
-  }
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Add New Ad</h1>
+      <h1 className="text-2xl font-bold">Edit Ad</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="rounded-xl bg-white p-6 shadow-sm">
@@ -152,20 +173,20 @@ export default function AddAd() {
             <div className="grid gap-6 md:grid-cols-2">
               <div>
                 <label className="mb-2 block text-sm font-medium text-gray-700">
-                  Titel
+                  Title
                 </label>
                 <input
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   className="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-[#9DD5E3] focus:outline-none"
-                  placeholder="Produkt titel"
+                  placeholder="Enter ad title"
                   required
                 />
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-gray-700">
-                Kategorie
+                  Category
                 </label>
                 <select
                   value={category}
@@ -173,7 +194,7 @@ export default function AddAd() {
                   className="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-[#9DD5E3] focus:outline-none"
                   required
                 >
-                  <option value="">Kategorie auswählen</option>
+                  <option value="">Select a category</option>
                   <option value="Kinderwagen">Kinderwagen</option>
                   <option value="Unterwegs">Unterwegs</option>
                   <option value="Kindersitze">Kindersitze</option>
@@ -185,7 +206,7 @@ export default function AddAd() {
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-gray-700">
-                  Kanton
+                  Location
                 </label>
                 <select
                   value={location}
@@ -193,7 +214,7 @@ export default function AddAd() {
                   className="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-[#9DD5E3] focus:outline-none"
                   required
                 >
-                  <option value="">Kanton auswählen</option>
+                  <option value="">Select a canton</option>
                   <option value="Aargau">Aargau</option>
                   <option value="Appenzell Ausserrhoden">Appenzell Ausserrhoden</option>
                   <option value="Appenzell Innerrhoden">Appenzell Innerrhoden</option>
@@ -224,46 +245,46 @@ export default function AddAd() {
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-gray-700">
-                  Preis in CHF
+                  Price
                 </label>
                 <input
                   type="number"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
                   className="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-[#9DD5E3] focus:outline-none"
-                  placeholder="Preis in CHF eingeben"
+                  placeholder="Enter price"
                   required
                 />
               </div>
               <div className="md:col-span-2">
                 <label className="mb-2 block text-sm font-medium text-gray-700">
-                Beschreibung
+                  Description
                 </label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={4}
                   className="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-[#9DD5E3] focus:outline-none"
-                  placeholder="Beschreibe dein Produkt"
+                  placeholder="Describe your ad"
                   required
                 />
               </div>
               <div className="md:col-span-2">
                 <label className="mb-2 block text-sm font-medium text-gray-700">
-                Suchbegriffe (Mit komma getrennt)
+                  Tags (comma separated)
                 </label>
                 <input
                   type="text"
                   value={tags.join(", ")}
                   onChange={handleTagsChange}
                   className="w-full rounded-lg border border-gray-200 px-4 py-2 focus:border-[#9DD5E3] focus:outline-none"
-                  placeholder="Suchbegriffe eingeben"
+                  placeholder="Enter tags"
                 />
               </div>
             </div>
           </div>
           <div className="mt-8 space-y-6">
-            <h2 className="text-lg font-semibold">Bilder</h2>
+            <h2 className="text-lg font-semibold">Images</h2>
             <div className="grid gap-4 md:grid-cols-3">
               <div className="relative flex aspect-square items-center justify-center rounded-lg border-2 border-dashed border-gray-200 hover:border-[#9DD5E3]">
                 <input
@@ -275,7 +296,7 @@ export default function AddAd() {
                 />
                 <div className="text-center">
                   <Upload className="mx-auto h-8 w-8 text-gray-400" />
-                  <p className="mt-2 text-sm text-gray-500">bild hochladen</p>
+                  <p className="mt-2 text-sm text-gray-500">Upload Image</p>
                 </div>
               </div>
               {images.map((image, index) => (
@@ -284,7 +305,7 @@ export default function AddAd() {
                   className="relative aspect-square rounded-lg bg-gray-100 overflow-hidden group"
                 >
                   <Image
-                    src={image}
+                    src={image || "/placeholder.svg"}
                     alt="Preview"
                     layout="fill"
                     objectFit="cover"
@@ -308,7 +329,7 @@ export default function AddAd() {
             className="rounded-lg bg-[#9DD5E3] px-6 py-2 font-medium text-white hover:bg-[#8bc5d3]"
             disabled={loading}
           >
-            {loading ? "Posting..." : "Produkt veröffentlichen"}
+            {loading ? "Updating..." : "Update Ad"}
           </button>
         </div>
       </form>
